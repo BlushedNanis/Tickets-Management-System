@@ -17,6 +17,15 @@ class MainWindow(QMainWindow):
         records_menu_item = self.menuBar().addMenu("&Registros")
         help_menu_item = self.menuBar().addMenu("&Ayuda")
         
+        # Menu bar actions
+        add_ticket_action = QAction("Agregar caseta", self)
+        file_menu_item.addAction(add_ticket_action)
+        
+        remove_ticket_action = QAction("Eliminar caseta", self)
+        file_menu_item.addAction(remove_ticket_action)
+        
+        edit_ticket_action = QAction("Editar caseta", self)
+        file_menu_item.addAction(edit_ticket_action)
         
 app = QApplication(argv)
 main_window = MainWindow()
