@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QApplication
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QAction
 from sys import argv, exit
+
 
 class MainWindow(QMainWindow):
     
@@ -9,8 +10,7 @@ class MainWindow(QMainWindow):
         
         # Window config
         self.setWindowTitle("Desglosador de Casetas")
-        icon = QIcon("Media\\icon.ico")
-        self.setWindowIcon(icon)
+        self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
         
         # Menu bar
         file_menu_item = self.menuBar().addMenu("&Archivo")
