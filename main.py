@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar
 from PySide6.QtGui import QIcon, QAction
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt
 from sys import argv, exit
 
 
@@ -47,6 +47,9 @@ class MainWindow(QMainWindow):
                                      "Editar caseta", self)
         file_menu_item.addAction(edit_ticket_action)
         
+        for action in file_menu_item.actions():
+            action.setIconVisibleInMenu(False)
+        
         # --> Records menu actions
         view_records_action = QAction("Ver registros", self)
         records_menu_item.addAction(view_records_action)
@@ -57,6 +60,9 @@ class MainWindow(QMainWindow):
         
         path_records_action = QAction("Ruta de guardado", self)
         records_menu_item.addAction(path_records_action)
+        
+        for action in records_menu_item.actions():
+            action.setIconVisibleInMenu(False)
         
         # --> Help menu actions
         guide_help_action = QAction("Guía de uso", self)
