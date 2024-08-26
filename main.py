@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar
 from PySide6.QtGui import QIcon, QAction
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
 from sys import argv, exit
 
 
@@ -25,28 +25,34 @@ class MainWindow(QMainWindow):
         add_record_action = QAction("Nuevo registro", self)
         file_menu_item.addAction(add_record_action)
         
-        save_record_action = QAction("Guardar registro", self)
+        save_record_action = QAction(QIcon("Media\\action_icons\\save.png"), 
+                                     "Guardar registro", self)
         file_menu_item.addAction(save_record_action)
         
-        export_record_action = QAction("Exportar registro", self)
+        export_record_action = QAction(QIcon("Media\\action_icons\\export.png"), 
+                                       "Exportar registro", self)
         file_menu_item.addAction(export_record_action)
         
         file_menu_item.addSeparator()
         
-        add_ticket_action = QAction("Agregar caseta", self)
+        add_ticket_action = QAction(QIcon("Media\\action_icons\\add.png"), 
+                                    "Agregar caseta", self)
         file_menu_item.addAction(add_ticket_action)
         
-        remove_ticket_action = QAction("Eliminar caseta", self)
+        remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"), 
+                                       "Eliminar caseta", self)
         file_menu_item.addAction(remove_ticket_action)
         
-        edit_ticket_action = QAction("Editar caseta", self)
+        edit_ticket_action = QAction(QIcon("Media\\action_icons\\edit.png"), 
+                                     "Editar caseta", self)
         file_menu_item.addAction(edit_ticket_action)
         
         # --> Records menu actions
         view_records_action = QAction("Ver registros", self)
         records_menu_item.addAction(view_records_action)
         
-        search_records_action = QAction("Buscar registros", self)
+        search_records_action = QAction(QIcon("Media\\action_icons\\search.png"), 
+                                        "Buscar registros", self)
         records_menu_item.addAction(search_records_action)
         
         path_records_action = QAction("Ruta de guardado", self)
@@ -76,7 +82,12 @@ class MainWindow(QMainWindow):
         tool_bar.setMovable(True)
         tool_bar.setFloatable(False)
         self.addToolBar(Qt.BottomToolBarArea,tool_bar)
-        tool_bar.addActions((add_ticket_action, remove_ticket_action))
+        tool_bar.addActions((add_ticket_action, remove_ticket_action, 
+                             edit_ticket_action))
+        tool_bar.addSeparator()
+        tool_bar.addActions((save_record_action, export_record_action,
+                             search_records_action))
+        tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
         
 app = QApplication(argv)
