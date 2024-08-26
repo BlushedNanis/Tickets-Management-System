@@ -20,6 +20,17 @@ class MainWindow(QMainWindow):
         help_menu_item = self.menuBar().addMenu("&Ayuda")
         
         # Menu bar actions
+        add_record_action = QAction("Nuevo registro", self)
+        file_menu_item.addAction(add_record_action)
+        
+        save_record_action = QAction("Guardar registro", self)
+        file_menu_item.addAction(save_record_action)
+        
+        export_record_action = QAction("Exportar registro", self)
+        file_menu_item.addAction(export_record_action)
+        
+        file_menu_item.addSeparator()
+        
         add_ticket_action = QAction("Agregar caseta", self)
         file_menu_item.addAction(add_ticket_action)
         
