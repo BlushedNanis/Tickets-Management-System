@@ -20,6 +20,7 @@ class MainWindow(QMainWindow):
         help_menu_item = self.menuBar().addMenu("&Ayuda")
         
         # Menu bar actions
+        # File menu actions
         add_record_action = QAction("Nuevo registro", self)
         file_menu_item.addAction(add_record_action)
         
@@ -39,6 +40,16 @@ class MainWindow(QMainWindow):
         
         edit_ticket_action = QAction("Editar caseta", self)
         file_menu_item.addAction(edit_ticket_action)
+        
+        # Records menu actions
+        view_records_action = QAction("Ver registros", self)
+        records_menu_item.addAction(view_records_action)
+        
+        search_records_action = QAction("Buscar registros", self)
+        records_menu_item.addAction(search_records_action)
+        
+        path_records_action = QAction("Ruta de guardado", self)
+        records_menu_item.addAction(path_records_action)
         
         # Tickets table
         self.table = QTableWidget()
