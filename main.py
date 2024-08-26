@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QMainWindow, QApplication
+from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
+    QAbstractItemView
 from PySide6.QtGui import QIcon, QAction
 from sys import argv, exit
 
@@ -26,6 +27,15 @@ class MainWindow(QMainWindow):
         
         edit_ticket_action = QAction("Editar caseta", self)
         file_menu_item.addAction(edit_ticket_action)
+        
+        # Tickets table
+        self.table = QTableWidget()
+        self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(("ID", "Caseta", "Total", 
+                                              "Sub-Total", "IVA"))
+        self.table.verticalHeader().setVisible(False)
+        self.setCentralWidget(self.table)
         
 app = QApplication(argv)
 main_window = MainWindow()
