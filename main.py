@@ -51,6 +51,16 @@ class MainWindow(QMainWindow):
         path_records_action = QAction("Ruta de guardado", self)
         records_menu_item.addAction(path_records_action)
         
+        # Help menu actions
+        guide_help_action = QAction("Guía de uso", self)
+        help_menu_item.addAction(guide_help_action)
+        
+        repo_help_action = QAction("Repositorio (GitHub)", self)
+        help_menu_item.addAction(repo_help_action)
+        
+        blushed_help_action = QAction("BlushedNanis", self)
+        help_menu_item.addAction(blushed_help_action)
+
         # Tickets table
         self.table = QTableWidget()
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
