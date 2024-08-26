@@ -95,8 +95,9 @@ class MainWindow(QMainWindow):
                              search_records_action))
         tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
-        
-app = QApplication(argv)
-main_window = MainWindow()
-main_window.show()
-exit(app.exec())
+
+if __name__ == "__main__":
+    app = QApplication(argv)
+    main_window = MainWindow()
+    main_window.show()
+    exit(app.exec())
