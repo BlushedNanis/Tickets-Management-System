@@ -7,7 +7,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Desglosador de Casetas")
-
+        icon = QIcon("Media\\icon.ico")
+        self.setWindowIcon(icon)
         
         
 app = QApplication(argv)
