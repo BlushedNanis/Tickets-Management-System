@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
         # Window config
         self.setWindowTitle("Desglosador de Casetas")
         self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
+        self.resize(600, 400)
         
         # Menu bar
         file_menu_item = self.menuBar().addMenu("&Archivo")
