@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtCore import Qt
-from tickets import Ticket
+from tickets import Tickets
 from sys import argv, exit
 
 
@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         
         add_ticket_action = QAction(QIcon("Media\\action_icons\\add.png"), 
                                     "Agregar caseta", self)
+        add_ticket_action.triggered.connect(self.add_ticket)
         file_menu_item.addAction(add_ticket_action)
         
         remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"), 
@@ -84,7 +85,7 @@ class MainWindow(QMainWindow):
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
         
-        self.load_empty_ticket()
+        self.load_empty_tickets()
         
         # Toolbar
         tool_bar = QToolBar()
@@ -98,14 +99,22 @@ class MainWindow(QMainWindow):
                              search_records_action))
         tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
-    def load_empty_ticket(self):
-        ticket = Ticket()
+    def load_tickets(self):
         self.table.setRowCount(0)
-        for index, row in ticket.data.iterrows():
+        for index, row in self.tickets.data.iterrows():
             self.table.insertRow(index-1)
             for column_number, cell_data in enumerate(row):
                 self.table.setItem(index-1, column_number,
                                    QTableWidgetItem(str(cell_data)))
+    
+    def load_empty_tickets(self):
+        self.tickets = Tickets()
+        self.load_tickets()
+        
+    def add_ticket(self):
+        self.tickets.add_ticket()
+        self.load_tickets()
+        
 
 if __name__ == "__main__":
     app = QApplication(argv)
