@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
-    QAbstractItemView, QToolBar
+    QAbstractItemView, QToolBar, QTableWidgetItem
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtCore import Qt
+from tickets import Ticket
 from sys import argv, exit
 
 
@@ -83,6 +84,8 @@ class MainWindow(QMainWindow):
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
         
+        self.load_empty_ticket()
+        
         # Toolbar
         tool_bar = QToolBar()
         tool_bar.setMovable(True)
@@ -95,6 +98,14 @@ class MainWindow(QMainWindow):
                              search_records_action))
         tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
+    def load_empty_ticket(self):
+        ticket = Ticket()
+        self.table.setRowCount(0)
+        for index, row in ticket.data.iterrows():
+            self.table.insertRow(index-1)
+            for column_number, cell_data in enumerate(row):
+                self.table.setItem(index-1, column_number,
+                                   QTableWidgetItem(str(cell_data)))
 
 if __name__ == "__main__":
     app = QApplication(argv)
