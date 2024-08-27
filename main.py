@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
-    QGridLayout, QPushButton
+    QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtCore import Qt
 from tickets import Tickets
@@ -37,10 +37,10 @@ class MainWindow(QMainWindow):
         
         file_menu_item.addSeparator()
         
-        add_ticket_action = QAction(QIcon("Media\\action_icons\\add.png"), 
-                                    "Agregar caseta", self)
-        add_ticket_action.triggered.connect(self.add_ticket)
-        file_menu_item.addAction(add_ticket_action)
+        add_tickets_action = QAction(QIcon("Media\\action_icons\\add.png"), 
+                                    "Agregar casetas", self)
+        add_tickets_action.triggered.connect(self.add_tickets)
+        file_menu_item.addAction(add_tickets_action)
         
         remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"), 
                                        "Eliminar caseta", self)
@@ -87,14 +87,14 @@ class MainWindow(QMainWindow):
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
         
-        self.load_empty_tickets()
+        self.create_tickets()
         
         # Toolbar
         tool_bar = QToolBar()
         tool_bar.setMovable(True)
         tool_bar.setFloatable(False)
         self.addToolBar(Qt.BottomToolBarArea,tool_bar)
-        tool_bar.addActions((add_ticket_action, remove_ticket_action, 
+        tool_bar.addActions((add_tickets_action, remove_ticket_action, 
                              edit_ticket_action))
         tool_bar.addSeparator()
         tool_bar.addActions((save_record_action, export_record_action,
@@ -109,19 +109,100 @@ class MainWindow(QMainWindow):
                 self.table.setItem(index-1, column_number,
                                    QTableWidgetItem(str(cell_data)))
     
-    def load_empty_tickets(self):
+    def create_tickets(self):
         self.tickets = Tickets()
-        self.load_tickets()
         
-    def add_ticket(self):
-        self.tickets.add_ticket()
-        self.load_tickets()
-        
-    def remove_ticket(self):
-        self.dialog = RemoveDialog()
+    def add_tickets(self):
+        self.dialog = AddTicketDialog()
         self.dialog.exec()
         
-class RemoveDialog(QDialog):
+    def remove_ticket(self):
+        self.dialog = RemoveTicketDialog()
+        self.dialog.exec()
+        
+class AddTicketDialog(QDialog):
+    """
+    QDialog, to add new tickets to the main window table. The dialog will
+    remain open until the user close it manually, so multiple tickets can be
+    added at once.
+    """
+    def __init__(self):
+        super().__init__()
+        self.setWindowIcon(QIcon("Media\\action_icons\\add.png"))
+        self.setWindowTitle("Agregar casetas")
+        self.setFixedSize(200,200)
+        layout = QGridLayout()
+        
+        # Dialog widgets
+        self.ticket_id_label = QLabel("Caseta ID: "\
+                                      f"{len(main_window.tickets.data) + 1}")
+        layout.addWidget(self.ticket_id_label, 0, 0, 1, 2, 
+                         Qt.AlignmentFlag.AlignHCenter)
+        
+        ticket_name_label = QLabel("Caseta:")
+        layout.addWidget(ticket_name_label, 1, 0, 1, 2)
+        
+        self.ticket_name = QLineEdit(f"Caseta {len(main_window.tickets.data) + 1}")
+        layout.addWidget(self.ticket_name, 2, 0, 1, 2)
+        
+        ticket_total_label = QLabel("Total:")
+        layout.addWidget(ticket_total_label, 3, 0, 1, 2)
+        
+        self.ticket_total = QLineEdit()
+        self.ticket_total.setPlaceholderText("$")
+        layout.addWidget(self.ticket_total, 4, 0, 1, 2)
+        
+        # Vertical spacing for buttons
+        layout.addItem(QSpacerItem(20,20), 5, 0, 1, 2)
+        
+        add_button = QPushButton("Agregar")
+        add_button.clicked.connect(self.add_ticket)
+        layout.addWidget(add_button, 6, 0)
+        
+        cancel_button = QPushButton("Cancelar")
+        cancel_button.clicked.connect(self.close)
+        layout.addWidget(cancel_button, 6, 1)
+        
+        self.setLayout(layout)
+        
+        # Set focus on total, for user convenience
+        self.ticket_total.setFocus()
+        
+    def add_ticket(self):
+        """
+        Adds a new ticket to the tickets dataframe, with the information 
+        provided by the user. If the user enters alphabetic characters in the 
+        total box, an error message will appear and the ticket won't be added.
+        """
+        try:
+            main_window.tickets.add_ticket(self.ticket_name.text(),
+                                        float(self.ticket_total.text()))
+            main_window.load_tickets()
+            self.ticket_total.clear()
+            self.ticket_total.setFocus()
+            self.ticket_id_label.setText("Caseta ID: "\
+                                        f"{len(main_window.tickets.data) + 1}")
+            self.ticket_name.setText(f"Caseta {len(main_window.tickets.data) + 1}")
+        except ValueError:
+            self.value_warning()
+            
+    def value_warning(self):
+        """
+        Message in case that the user enters an alphabetic character in the
+        total box.
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowTitle("Advertencia")
+        value_message.setText("Error al ingresar el Total:\n\n" \
+                              "Por favor, provea unicamente valores numericos" \
+                              "\nej. 123 | 32.5 | 567.67")
+        value_message.exec()
+        self.ticket_total.clear()
+        self.ticket_total.setFocus()
+        
+        
+class RemoveTicketDialog(QDialog):
     """
     QDialog to remove an specific ticket from the main window table.
     The ticket to be removed will be the one selected from the user on the table.
