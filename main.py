@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
-    QAbstractItemView, QToolBar, QTableWidgetItem
+    QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
+    QGridLayout, QPushButton
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtCore import Qt
 from tickets import Tickets
@@ -43,6 +44,7 @@ class MainWindow(QMainWindow):
         
         remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"), 
                                        "Eliminar caseta", self)
+        remove_ticket_action.triggered.connect(self.remove_ticket)
         file_menu_item.addAction(remove_ticket_action)
         
         edit_ticket_action = QAction(QIcon("Media\\action_icons\\edit.png"), 
@@ -114,6 +116,52 @@ class MainWindow(QMainWindow):
     def add_ticket(self):
         self.tickets.add_ticket()
         self.load_tickets()
+        
+    def remove_ticket(self):
+        self.dialog = RemoveDialog()
+        self.dialog.exec()
+        
+class RemoveDialog(QDialog):
+    """
+    QDialog to remove an specific ticket from the main window table.
+    The ticket to be removed will be the one selected from the user on the table.
+    If the user does not select a ticket, by default ID = 1 is selected. 
+    """
+    def __init__(self):
+        super().__init__()
+        self.setWindowIcon(QIcon("Media\\action_icons\\remove.png"))
+        self.setWindowTitle("Eliminar caseta")
+        self.setFixedSize(270,100)
+        layout = QGridLayout()
+        
+        # Get the ticket ID, based on the selected row on the table
+        self.ticket_id = int(main_window.table.item(main_window.table.currentRow(),
+                                                    0).text())
+        
+        # Dialog widgets
+        label = QLabel("¿Estás seguro que deseas eliminar esta caseta?")
+        layout.addWidget(label, 0, 0, 1, 2)
+        
+        ticket_label = QLabel(f"Caseta ID: {self.ticket_id}")
+        layout.addWidget(ticket_label, 1, 0, 1, 2, Qt.AlignmentFlag.AlignHCenter)
+        
+        yes_button = QPushButton("Si")
+        yes_button.clicked.connect(self.remove_ticket)
+        layout.addWidget(yes_button, 2, 0)
+        
+        no_button = QPushButton("No")
+        no_button.clicked.connect(self.close)
+        layout.addWidget(no_button, 2, 1)
+        
+        self.setLayout(layout)
+        
+    def remove_ticket(self):
+        """
+        Removes the selected ticket from the main window table and update it
+        """
+        main_window.tickets.remove_ticket(self.ticket_id)
+        main_window.load_tickets()
+        self.close()
         
 
 if __name__ == "__main__":
