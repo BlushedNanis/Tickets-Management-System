@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
     QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox
-from PySide6.QtGui import QIcon, QAction
+from PySide6.QtGui import QIcon, QAction, QDoubleValidator, \
+    QRegularExpressionValidator
 from PySide6.QtCore import Qt
 from tickets import Tickets
 from sys import argv, exit
@@ -11,6 +12,9 @@ class MainWindow(QMainWindow):
     
     def __init__(self):
         super().__init__()
+        
+        # Validator to decimal number inputs
+        self.float_validator = QRegularExpressionValidator("^\\d+(\\.\\d+)?$")
         
         # Window config
         self.setWindowTitle("Desglosador de Casetas")
@@ -150,6 +154,7 @@ class AddTicketDialog(QDialog):
         
         self.ticket_total = QLineEdit()
         self.ticket_total.setPlaceholderText("$")
+        self.ticket_total.setValidator(main_window.float_validator) # Decimal number validator
         layout.addWidget(self.ticket_total, 4, 0, 1, 2)
         
         # Vertical spacing for buttons
@@ -171,10 +176,12 @@ class AddTicketDialog(QDialog):
     def add_ticket(self):
         """
         Adds a new ticket to the tickets dataframe, with the information 
-        provided by the user. If the user enters alphabetic characters in the 
-        total box, an error message will appear and the ticket won't be added.
+        provided by the user. Ift the user leaves blank inputs a warning
+        message will appear.
         """
-        try:
+        if self.ticket_total.text() == "" or self.ticket_name.text() == "":
+            self.value_warning()
+        else:
             main_window.tickets.add_ticket(self.ticket_name.text(),
                                         float(self.ticket_total.text()))
             main_window.load_tickets()
@@ -183,22 +190,20 @@ class AddTicketDialog(QDialog):
             self.ticket_id_label.setText("Caseta ID: "\
                                         f"{len(main_window.tickets.data) + 1}")
             self.ticket_name.setText(f"Caseta {len(main_window.tickets.data) + 1}")
-        except ValueError:
-            self.value_warning()
+        
             
     def value_warning(self):
         """
-        Message in case that the user enters an alphabetic character in the
-        total box.
+        QMessageBox to let the user know it has missing data. It also resets
+        the input lines to the default values.
         """
         value_message = QMessageBox()
         value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
         value_message.setWindowTitle("Advertencia")
-        value_message.setText("Error al ingresar el Total:\n\n" \
-                              "Por favor, provea unicamente valores numericos" \
-                              "\nej. 123 | 32.5 | 567.67")
+        value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
         self.ticket_total.clear()
+        self.ticket_name.setText(f"Caseta {len(main_window.tickets.data) + 1}")
         self.ticket_total.setFocus()
         
         
