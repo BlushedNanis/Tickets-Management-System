@@ -55,6 +55,7 @@ class MainWindow(QMainWindow):
         
         edit_ticket_action = QAction(QIcon("Media\\action_icons\\edit.png"), 
                                      "Editar caseta", self)
+        edit_ticket_action.triggered.connect(self.edit_ticket)
         file_menu_item.addAction(edit_ticket_action)
         
         for action in file_menu_item.actions():
@@ -143,6 +144,15 @@ class MainWindow(QMainWindow):
         except AttributeError:
             pass
         
+    def edit_ticket(self):
+        """
+        Executes the dialog to edit tickets, it pass if the table is empty
+        """
+        try:
+            self.dialog = EditTicketDialog()
+            self.dialog.exec()
+        except AttributeError:
+            pass
 class AddTicketDialog(QDialog):
     """
     QDialog, to add new tickets to the main window table. The dialog will
@@ -151,6 +161,7 @@ class AddTicketDialog(QDialog):
     """
     def __init__(self):
         super().__init__()
+        # Dialog config
         self.setWindowIcon(QIcon("Media\\action_icons\\add.png"))
         self.setWindowTitle("Agregar casetas")
         self.setFixedSize(200,200)
@@ -234,6 +245,7 @@ class RemoveTicketDialog(QDialog):
     """
     def __init__(self):
         super().__init__()
+        # Dialog config
         self.setWindowIcon(QIcon("Media\\action_icons\\remove.png"))
         self.setWindowTitle("Eliminar caseta")
         self.setFixedSize(270,100)
@@ -265,6 +277,72 @@ class RemoveTicketDialog(QDialog):
         Removes the selected ticket from the main window table and update it
         """
         main_window.tickets.remove_ticket(self.ticket_id)
+        main_window.load_tickets()
+        self.close()
+        
+        
+class EditTicketDialog(QDialog):
+    """
+    QDialog, to edit an specific ticket from the main window table. 
+    The ticket to be removed will be the one selected from the user on the table.
+    If the user does not select a ticket, by default ID = 1 is selected.
+    """
+    def __init__(self):
+        super().__init__()
+        # Dialog config
+        self.setWindowIcon(QIcon("Media\\action_icons\\edit.png"))
+        self.setWindowTitle("Editar caseta")
+        self.setFixedSize(200,200)
+        layout = QGridLayout()
+        
+        # Get the ticket ID, based on the selected row on the table
+        self.ticket_id = int(main_window.table.item(main_window.table.currentRow(),
+                                                    0).text())
+        
+        # Dialog widgets
+        self.ticket_id_label = QLabel(f"Caseta ID: {self.ticket_id}")
+        layout.addWidget(self.ticket_id_label, 0, 0, 1, 2, 
+                         Qt.AlignmentFlag.AlignHCenter)
+        
+        ticket_name_label = QLabel("Caseta:")
+        layout.addWidget(ticket_name_label, 1, 0, 1, 2)
+        
+        self.ticket_name = QLineEdit(main_window.table.item(
+            main_window.table.currentRow(), 1).text())
+        layout.addWidget(self.ticket_name, 2, 0, 1, 2)
+        
+        ticket_total_label = QLabel("Total:")
+        layout.addWidget(ticket_total_label, 3, 0, 1, 2)
+        
+        self.ticket_total = QLineEdit(main_window.table.item(
+            main_window.table.currentRow(),2).text())
+        self.ticket_total.setPlaceholderText("$")
+        self.ticket_total.setValidator(main_window.float_validator) # Decimal number validator
+        layout.addWidget(self.ticket_total, 4, 0, 1, 2)
+        
+        # Vertical spacing for buttons
+        layout.addItem(QSpacerItem(20,20), 5, 0, 1, 2)
+        
+        add_button = QPushButton("Terminar")
+        add_button.clicked.connect(self.edit_ticket)
+        layout.addWidget(add_button, 6, 0)
+        
+        cancel_button = QPushButton("Cancelar")
+        cancel_button.clicked.connect(self.close)
+        layout.addWidget(cancel_button, 6, 1)
+        
+        self.setLayout(layout)
+        
+        # Set focus on total, for user convenience
+        self.ticket_total.setFocus()
+        
+    def edit_ticket(self):
+        """
+        Updates the selected ticket with the given information by the user and
+        re-loads the main window table.
+        """
+        main_window.tickets.edit_ticket(self.ticket_id, self.ticket_name.text(), 
+                                        float(self.ticket_total.text()))
         main_window.load_tickets()
         self.close()
         

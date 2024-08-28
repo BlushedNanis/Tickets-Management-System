@@ -31,6 +31,19 @@ class Tickets():
         self.data.index = range(1,len(self.data)+1)
         self.data["ID"] = self.data.index
         
+    def edit_ticket(self, index:int, ticket_name:str, ticket_total:float):
+        """Edits the row at the given index with the provided user data. Also
+        updates the Sub-Total and IVA.
+
+        Args:
+            index (int): Index of the row to be edited
+            ticket_name (str): Name of the ticket
+            ticket_total (float): Total amount of the ticket
+        """
+        sub_total = round(ticket_total / 1.16, 2)
+        iva = round(sub_total * 0.16, 2)
+        self.data.loc[index] = (index, ticket_name, ticket_total, sub_total, iva)
+
         
 if __name__ == "__main__":
     t = Tickets()
