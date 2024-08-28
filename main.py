@@ -1,8 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
     QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox
-from PySide6.QtGui import QIcon, QAction, QDoubleValidator, \
-    QRegularExpressionValidator
+from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator
 from PySide6.QtCore import Qt
 from tickets import Tickets
 from sys import argv, exit
@@ -19,7 +18,7 @@ class MainWindow(QMainWindow):
         # Window config
         self.setWindowTitle("Desglosador de Casetas")
         self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
-        self.resize(600, 400)
+        self.resize(600, 600)
         
         # Menu bar
         file_menu_item = self.menuBar().addMenu("&Archivo")
