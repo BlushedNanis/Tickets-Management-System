@@ -93,6 +93,7 @@ class MainWindow(QMainWindow):
                                               "Sub-Total", "IVA"))
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
+        self.table.doubleClicked.connect(self.edit_ticket)
         # Set custom columns width
         col_widths = (30,300,70,70,70)
         for col, width in zip(range(0,5), col_widths):
