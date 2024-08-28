@@ -43,6 +43,19 @@ class Tickets():
         sub_total = round(ticket_total / 1.16, 2)
         iva = round(sub_total * 0.16, 2)
         self.data.loc[index] = (index, ticket_name, ticket_total, sub_total, iva)
+        
+    def calculate_summary(self):
+        """
+        Calculates the sum of the current tickets data, assigning it to the 
+        "summary" variable of the object.
+        And formats the values to fit the main window table.
+        """
+        self.summary = self.data.sum()
+        self.summary["ID"] = ""
+        self.summary["Toll"] = "TOTAL"
+        self.summary["Total"] = round(self.summary["Total"], 2)
+        self.summary["Sub-Total"] = round(self.summary["Sub-Total"], 2)
+        self.summary["IVA"] = round(self.summary["IVA"], 2)
 
         
 if __name__ == "__main__":

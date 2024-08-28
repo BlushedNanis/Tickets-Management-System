@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
-    QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox
+    QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox, QMenu
 from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator
 from PySide6.QtCore import Qt
 from tickets import Tickets
@@ -114,13 +114,32 @@ class MainWindow(QMainWindow):
         tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
     def load_tickets(self):
+        """
+        Loads the tickets data into the main window table and 
+        also loads the summary row at the end.
+        """
         self.table.setRowCount(0)
         for index, row in self.tickets.data.iterrows():
             self.table.insertRow(index-1)
             for column_number, cell_data in enumerate(row):
                 self.table.setItem(index-1, column_number,
                                    QTableWidgetItem(str(cell_data)))
+        self.load_summary()
         self.table.scrollToBottom()
+        
+    def load_summary(self):
+        """
+        Loads the summary row at the end of the main window table and set the
+        row as uneditable by the user.
+        """
+        self.tickets.calculate_summary()
+        self.summary_row = self.table.rowCount()
+        self.table.insertRow(self.summary_row)
+        for col, cell_data in enumerate(self.tickets.summary):
+            self.table.setItem(self.summary_row, col, 
+                               QTableWidgetItem(str(cell_data)))
+        for col in range(self.table.columnCount()):
+            self.table.item(self.summary_row, col).setFlags(Qt.ItemFlag.ItemIsEnabled)
     
     def create_tickets(self):
         """
@@ -140,8 +159,9 @@ class MainWindow(QMainWindow):
         Executes the dialog to remove tickets, it pass if the table is empty
         """
         try:
-            self.dialog = RemoveTicketDialog()
-            self.dialog.exec()
+            if self.is_not_summary():
+                self.dialog = RemoveTicketDialog()
+                self.dialog.exec()
         except AttributeError:
             pass
         
@@ -150,10 +170,23 @@ class MainWindow(QMainWindow):
         Executes the dialog to edit tickets, it pass if the table is empty
         """
         try:
-            self.dialog = EditTicketDialog()
-            self.dialog.exec()
+            if self.is_not_summary():
+                self.dialog = EditTicketDialog()
+                self.dialog.exec()
         except AttributeError:
             pass
+        
+    def is_not_summary(self) -> bool:
+        """Checks if the selected row by the user is not the summary row.
+
+        Returns:
+            bool: True if the selected row is not the summary row
+        """
+        row = self.table.currentRow()
+        if row != self.summary_row:
+            return True
+        
+        
 class AddTicketDialog(QDialog):
     """
     QDialog, to add new tickets to the main window table. The dialog will
