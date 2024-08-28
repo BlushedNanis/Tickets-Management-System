@@ -125,8 +125,11 @@ class MainWindow(QMainWindow):
         self.dialog.exec()
         
     def remove_ticket(self):
-        self.dialog = RemoveTicketDialog()
-        self.dialog.exec()
+        try:
+            self.dialog = RemoveTicketDialog()
+            self.dialog.exec()
+        except AttributeError:
+            pass
         
 class AddTicketDialog(QDialog):
     """
