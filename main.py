@@ -89,6 +89,10 @@ class MainWindow(QMainWindow):
                                               "Sub-Total", "IVA"))
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
+        # Set custom columns width
+        col_widths = (30,300,70,70,70)
+        for col, width in zip(range(0,5), col_widths):
+            self.table.setColumnWidth(col,width)
         
         self.create_tickets()
         
@@ -111,6 +115,7 @@ class MainWindow(QMainWindow):
             for column_number, cell_data in enumerate(row):
                 self.table.setItem(index-1, column_number,
                                    QTableWidgetItem(str(cell_data)))
+        self.table.scrollToBottom()
     
     def create_tickets(self):
         self.tickets = Tickets()
