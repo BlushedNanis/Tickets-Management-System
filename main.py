@@ -8,7 +8,10 @@ from sys import argv, exit
 
 
 class MainWindow(QMainWindow):
-    
+    """
+    QMainWindow, which displays a table as the main widget, the table contains
+    the tickets information. It also contains a menubar and toolbar.
+    """
     def __init__(self):
         super().__init__()
         
@@ -118,13 +121,22 @@ class MainWindow(QMainWindow):
         self.table.scrollToBottom()
     
     def create_tickets(self):
+        """
+        Creates a tickets instance
+        """
         self.tickets = Tickets()
         
     def add_tickets(self):
+        """
+        Executes the dialog to add tickets
+        """
         self.dialog = AddTicketDialog()
         self.dialog.exec()
         
     def remove_ticket(self):
+        """
+        Executes the dialog to remove tickets, it pass if the table is empty
+        """
         try:
             self.dialog = RemoveTicketDialog()
             self.dialog.exec()
