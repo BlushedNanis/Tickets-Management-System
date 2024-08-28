@@ -341,10 +341,24 @@ class EditTicketDialog(QDialog):
         Updates the selected ticket with the given information by the user and
         re-loads the main window table.
         """
-        main_window.tickets.edit_ticket(self.ticket_id, self.ticket_name.text(), 
-                                        float(self.ticket_total.text()))
-        main_window.load_tickets()
-        self.close()
+        if self.ticket_total.text() == "" or self.ticket_name.text() == "":
+            self.value_warning()
+        else:
+            main_window.tickets.edit_ticket(self.ticket_id, self.ticket_name.text(), 
+                                            float(self.ticket_total.text()))
+            main_window.load_tickets()
+            self.close()
+            
+    def value_warning(self):
+        """
+        QMessageBox to let the user know it has missing data. It also resets
+        the input lines to the default values.
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowTitle("Advertencia")
+        value_message.setText("Ooops, parece que te faltó llenar un campo")
+        value_message.exec()
         
 
 if __name__ == "__main__":
