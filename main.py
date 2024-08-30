@@ -33,14 +33,6 @@ class MainWindow(QMainWindow):
         
         # Actions
         # --> Tickets actions
-        self.add_record_action = QAction("Nuevo registro", self)
-        
-        self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
-                                          "Guardar registro", self)
-        
-        self.export_record_action = QAction(QIcon("Media\\action_icons\\export.png"),
-                                            "Exportar registro", self)
-        
         self.add_tickets_action = QAction(QIcon("Media\\action_icons\\add.png"),
                                           "Agregar casetas", self)
         self.add_tickets_action.triggered.connect(self.add_tickets)
@@ -56,9 +48,22 @@ class MainWindow(QMainWindow):
         # --> Records actions
         self.view_records_action = QAction(QIcon("Media\\action_icons\\search.png"),
                                            "Ver registros", self)
+        self.view_records_action.triggered.connect(self.show_records_table)
         
-        self.search_records_action = QAction(QIcon("Media\\action_icons\\search.png"),
-                                             "Buscar registros", self)
+        self.add_record_action = QAction(QIcon("Media\\action_icons\\add.png"),
+                                               "Nuevo registro", self)
+        
+        self.remove_record_action = QAction(QIcon("Media\\action_icons\\remove.png"),
+                                            "Eliminar registro", self)
+        
+        self.edit_record_action = QAction(QIcon("Media\\action_icons\\edit.png"),
+                                          "Editar registro", self)
+        
+        self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
+                                          "Guardar registro", self)
+        
+        self.export_record_action = QAction(QIcon("Media\\action_icons\\export.png"),
+                                            "Exportar registro", self)
         
         self.path_records_action = QAction("Ruta de guardado", self)
         
@@ -86,7 +91,6 @@ class MainWindow(QMainWindow):
         
         # --> Records actions
         records_menu_item.addAction(self.view_records_action)
-        records_menu_item.addAction(self.search_records_action)
         records_menu_item.addAction(self.path_records_action)
         # Hide icons in records menu
         for action in records_menu_item.actions():
@@ -107,6 +111,7 @@ class MainWindow(QMainWindow):
         self.tool_bar = QToolBar()
         self.tool_bar.setMovable(True)
         self.tool_bar.setFloatable(False)
+        self.tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         self.addToolBar(Qt.BottomToolBarArea,self.tool_bar)
         self.show_tickets_toolbar() # Show tickets toolbar by default
         
@@ -136,7 +141,6 @@ class MainWindow(QMainWindow):
         self.tool_bar.addActions((self.save_record_action,
                                   self.export_record_action,
                                   self.view_records_action))
-        self.tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
     def load_tickets(self):
         """
@@ -210,6 +214,35 @@ class MainWindow(QMainWindow):
         row = self.table.currentRow()
         if row != self.summary_row:
             return True
+        
+    def show_records_table(self):
+        """
+        Shows the records on the table widget
+        """
+        self.resize(900,600)
+        self.table.clear()
+        self.table.setColumnCount(8)
+        self.table.setHorizontalHeaderLabels(("ID", "Registro", "Fecha de guardado", 
+                                              "Fecha de modificacion", "Casetas",
+                                              "Total", "Sub-Total", "IVA"))
+        self.table.verticalHeader().setVisible(False)
+        #self.table.doubleClicked.connect(self.edit_ticket)
+        # Set custom columns width
+        col_widths = (30,250,120,130,70,70,70,70)
+        for col, width in zip(range(0,8), col_widths):
+            self.table.setColumnWidth(col,width)
+        self.menuBar().hide()
+        self.show_records_toolbar()
+        
+    def show_records_toolbar(self):
+        """
+        Shows the toolbar for the records table
+        """
+        self.tool_bar.clear()
+        self.tool_bar.addActions((self.add_record_action,
+                                  self.remove_record_action, 
+                                  self.edit_record_action,
+                                  self.export_record_action))
         
           
 class AddTicketDialog(QDialog):
