@@ -15,6 +15,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
+        # Create the tickets instance
+        self.create_tickets()
+        
         # Validator to decimal number inputs
         self.float_validator = QRegularExpressionValidator("^\\d+(\\.\\d+)?$")
         
@@ -28,91 +31,112 @@ class MainWindow(QMainWindow):
         records_menu_item = self.menuBar().addMenu("&Registros")
         help_menu_item = self.menuBar().addMenu("&Ayuda")
         
+        # Actions
+        # --> Tickets actions
+        self.add_record_action = QAction("Nuevo registro", self)
+        
+        self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
+                                          "Guardar registro", self)
+        
+        self.export_record_action = QAction(QIcon("Media\\action_icons\\export.png"),
+                                            "Exportar registro", self)
+        
+        self.add_tickets_action = QAction(QIcon("Media\\action_icons\\add.png"),
+                                          "Agregar casetas", self)
+        self.add_tickets_action.triggered.connect(self.add_tickets)
+        
+        self.remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"),
+                                            "Eliminar caseta", self)
+        self.remove_ticket_action.triggered.connect(self.remove_ticket)
+        
+        self.edit_ticket_action = QAction(QIcon("Media\\action_icons\\edit.png"),
+                                          "Editar caseta", self)
+        self.edit_ticket_action.triggered.connect(self.edit_ticket)
+        
+        # --> Records actions
+        self.view_records_action = QAction(QIcon("Media\\action_icons\\search.png"),
+                                           "Ver registros", self)
+        
+        self.search_records_action = QAction(QIcon("Media\\action_icons\\search.png"),
+                                             "Buscar registros", self)
+        
+        self.path_records_action = QAction("Ruta de guardado", self)
+        
+        # --> Help actions
+        self.guide_help_action = QAction("Guía de uso", self)
+        
+        self.repo_help_action = QAction("Repositorio (GitHub)", self)
+        
+        self.blushed_help_action = QAction("BlushedNanis", self)
+        
+        
+        
         # Menu bar actions
-        # --> File menu actions
-        add_record_action = QAction("Nuevo registro", self)
-        file_menu_item.addAction(add_record_action)
-        
-        save_record_action = QAction(QIcon("Media\\action_icons\\save.png"), 
-                                     "Guardar registro", self)
-        file_menu_item.addAction(save_record_action)
-        
-        export_record_action = QAction(QIcon("Media\\action_icons\\export.png"), 
-                                       "Exportar registro", self)
-        file_menu_item.addAction(export_record_action)
-        
+        # --> File actions
+        file_menu_item.addAction(self.add_record_action)
+        file_menu_item.addAction(self.save_record_action)
+        file_menu_item.addAction(self.export_record_action)
         file_menu_item.addSeparator()
-        
-        add_tickets_action = QAction(QIcon("Media\\action_icons\\add.png"), 
-                                    "Agregar casetas", self)
-        add_tickets_action.triggered.connect(self.add_tickets)
-        file_menu_item.addAction(add_tickets_action)
-        
-        remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"), 
-                                       "Eliminar caseta", self)
-        remove_ticket_action.triggered.connect(self.remove_ticket)
-        file_menu_item.addAction(remove_ticket_action)
-        
-        edit_ticket_action = QAction(QIcon("Media\\action_icons\\edit.png"), 
-                                     "Editar caseta", self)
-        edit_ticket_action.triggered.connect(self.edit_ticket)
-        file_menu_item.addAction(edit_ticket_action)
-        
+        file_menu_item.addAction(self.add_tickets_action)
+        file_menu_item.addAction(self.remove_ticket_action)
+        file_menu_item.addAction(self.edit_ticket_action)
+        # Hide icons in file menu
         for action in file_menu_item.actions():
             action.setIconVisibleInMenu(False)
         
-        # --> Records menu actions
-        view_records_action = QAction(QIcon("Media\\action_icons\\search.png"),
-                                      "Ver registros", self)
-        records_menu_item.addAction(view_records_action)
-        
-        search_records_action = QAction(QIcon("Media\\action_icons\\search.png"), 
-                                        "Buscar registros", self)
-        records_menu_item.addAction(search_records_action)
-        
-        path_records_action = QAction("Ruta de guardado", self)
-        records_menu_item.addAction(path_records_action)
-        
+        # --> Records actions
+        records_menu_item.addAction(self.view_records_action)
+        records_menu_item.addAction(self.search_records_action)
+        records_menu_item.addAction(self.path_records_action)
+        # Hide icons in records menu
         for action in records_menu_item.actions():
             action.setIconVisibleInMenu(False)
         
-        # --> Help menu actions
-        guide_help_action = QAction("Guía de uso", self)
-        help_menu_item.addAction(guide_help_action)
+        # --> Help actions
+        help_menu_item.addAction(self.guide_help_action)
+        help_menu_item.addAction(self.repo_help_action)
+        help_menu_item.addAction(self.blushed_help_action)
         
-        repo_help_action = QAction("Repositorio (GitHub)", self)
-        help_menu_item.addAction(repo_help_action)
-        
-        blushed_help_action = QAction("BlushedNanis", self)
-        help_menu_item.addAction(blushed_help_action)
-
-        # Tickets table
+        # Table (Central Widget) config
         self.table = QTableWidget()
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.setCentralWidget(self.table)
+        self.show_tickets_table() # Show tickets table by default
+        
+        # Toolbar
+        self.tool_bar = QToolBar()
+        self.tool_bar.setMovable(True)
+        self.tool_bar.setFloatable(False)
+        self.addToolBar(Qt.BottomToolBarArea,self.tool_bar)
+        self.show_tickets_toolbar() # Show tickets toolbar by default
+        
+        
+    def show_tickets_table(self):
+        """
+        Shows the tickets on the table widget
+        """
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(("ID", "Caseta", "Total", 
                                               "Sub-Total", "IVA"))
         self.table.verticalHeader().setVisible(False)
-        self.setCentralWidget(self.table)
         self.table.doubleClicked.connect(self.edit_ticket)
         # Set custom columns width
         col_widths = (30,300,70,70,70)
         for col, width in zip(range(0,5), col_widths):
             self.table.setColumnWidth(col,width)
-        
-        self.create_tickets()
-        
-        # Toolbar
-        tool_bar = QToolBar()
-        tool_bar.setMovable(True)
-        tool_bar.setFloatable(False)
-        self.addToolBar(Qt.BottomToolBarArea,tool_bar)
-        tool_bar.addActions((add_tickets_action, remove_ticket_action, 
-                             edit_ticket_action))
-        tool_bar.addSeparator()
-        tool_bar.addActions((save_record_action, export_record_action,
-                             view_records_action))
-        tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
+            
+    def show_tickets_toolbar(self):
+        """
+        Shows the toolbar for the tickets table
+        """
+        self.tool_bar.addActions((self.add_tickets_action,
+                                  self.remove_ticket_action, 
+                                  self.edit_ticket_action))
+        self.tool_bar.addSeparator()
+        self.tool_bar.addActions((self.save_record_action,
+                                  self.export_record_action,
+                                  self.view_records_action))
+        self.tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
     def load_tickets(self):
         """
