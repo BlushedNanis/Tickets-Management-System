@@ -62,7 +62,8 @@ class MainWindow(QMainWindow):
             action.setIconVisibleInMenu(False)
         
         # --> Records menu actions
-        view_records_action = QAction("Ver registros", self)
+        view_records_action = QAction(QIcon("Media\\action_icons\\search.png"),
+                                      "Ver registros", self)
         records_menu_item.addAction(view_records_action)
         
         search_records_action = QAction(QIcon("Media\\action_icons\\search.png"), 
@@ -110,7 +111,7 @@ class MainWindow(QMainWindow):
                              edit_ticket_action))
         tool_bar.addSeparator()
         tool_bar.addActions((save_record_action, export_record_action,
-                             search_records_action))
+                             view_records_action))
         tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         
     def load_tickets(self):
@@ -186,7 +187,7 @@ class MainWindow(QMainWindow):
         if row != self.summary_row:
             return True
         
-        
+          
 class AddTicketDialog(QDialog):
     """
     QDialog, to add new tickets to the main window table. The dialog will
