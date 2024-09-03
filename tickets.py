@@ -1,10 +1,19 @@
 import pandas as pd
+import sqlite3 as db
+from os import environ, path, mkdir
+from records import Records
+
+directory = environ["USERPROFILE"] + "\\.tickets"
+if not path.exists(directory):
+    mkdir(directory)
 
 class Tickets():
     def __init__(self) -> None:
         self.data = pd.DataFrame(columns=["ID", "Toll", "Total", "Sub-Total", "IVA"])
         self.data["ID"] = self.data.index
-        self.data = self.data.fillna("")
+        #self.db_file = directory + "\\records.db"
+        self.db_file = "records.db"
+        self.records = Records()
         
     def add_ticket(self, ticket_name:str, ticket_total:float):
         """
@@ -56,7 +65,24 @@ class Tickets():
         self.summary["Total"] = round(self.summary["Total"], 2)
         self.summary["Sub-Total"] = round(self.summary["Sub-Total"], 2)
         self.summary["IVA"] = round(self.summary["IVA"], 2)
-
+        
+    def save_record(self, record_name:str):
+        """Save the record into the database.
+        
+        Args:
+            record_name (str): Name of the record
+        """
+        conn = db.connect(self.db_file)
+        self.data.to_sql(record_name, conn, index=False, if_exists="replace")
+        conn.close()
+        self.records.add_record(self.data, record_name)
+        
+    def clear_data(self) -> None:
+        """
+        Remove all the rows in the 'data' Data Frame
+        """
+        self.data = self.data.drop(range(1,len(self.data)+1))
+        
         
 if __name__ == "__main__":
     t = Tickets()

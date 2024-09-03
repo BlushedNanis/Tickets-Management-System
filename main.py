@@ -61,6 +61,7 @@ class MainWindow(QMainWindow):
         
         self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
                                           "Guardar registro", self)
+        self.save_record_action.triggered.connect(self.save_record)
         
         self.export_record_action = QAction(QIcon("Media\\action_icons\\export.png"),
                                             "Exportar registro", self)
@@ -214,6 +215,16 @@ class MainWindow(QMainWindow):
         row = self.table.currentRow()
         if row != self.summary_row:
             return True
+        
+    def save_record(self):
+        """
+        Executes the save record dialog, pass if the table is empty.
+        """
+        if self.table.rowCount() == 0:
+            pass
+        else:
+            self.dialog = SaveRecordDialog()
+            self.dialog.exec()
         
     def show_records_table(self):
         """
@@ -451,6 +462,56 @@ class EditTicketDialog(QDialog):
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
+        
+        
+class SaveRecordDialog(QDialog):
+    """
+    QDialog, to save the current tickets in the table as a record in the database.
+    
+    """
+    def __init__(self):
+        super().__init__()
+        # Dialog config
+        self.setWindowIcon(QIcon("Media\\action_icons\\save.png"))
+        self.setWindowTitle("Guardar registro")
+        self.setFixedSize(200,120)
+        layout = QGridLayout()
+        
+        # Dialog widgets
+        ticket_name_label = QLabel("Nombre del registro:")
+        layout.addWidget(ticket_name_label, 1, 0, 1, 2)
+        
+        self.record_name = QLineEdit()
+        layout.addWidget(self.record_name, 2, 0, 1, 2)
+        
+        # Vertical spacing for buttons
+        layout.addItem(QSpacerItem(20,20), 5, 0, 1, 2)
+        
+        save_button = QPushButton("Guardar")
+        save_button.clicked.connect(self.save_record)
+        layout.addWidget(save_button, 6, 0)
+        
+        cancel_button = QPushButton("Cancelar")
+        cancel_button.clicked.connect(self.close)
+        layout.addWidget(cancel_button, 6, 1)
+        
+        self.setLayout(layout)
+        
+    def save_record(self):
+        """
+        Saves the list of tickets into the database.
+        """
+        main_window.tickets.save_record(self.record_name.text())
+        self.clear_tickets()
+        self.close() 
+        
+    def clear_tickets(self):
+        """
+        Clear the tickets.data DataFrame and reset the rows on the main window
+        table.
+        """
+        main_window.table.setRowCount(0)
+        main_window.tickets.clear_data()
         
 
 if __name__ == "__main__":
