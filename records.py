@@ -1,13 +1,14 @@
 import sqlite3 as db
 from os import environ, path, mkdir
 from time import strftime
-from pandas import DataFrame
+import pandas as pd
 
 
 class Records():
     def __init__(self) -> None:
         #self.db_file = directory + "\\records.db"
         self.db_file = "records.db"
+        self.data = self.load_records()
         
     def create_table(self) -> None:
         """
@@ -36,7 +37,7 @@ class Records():
         cur.close()
         conn.close()
         
-    def add_record(self, data:DataFrame, name:str) -> None:
+    def add_record(self, data:pd.DataFrame, name:str) -> None:
         """Adds the given record of ticket to the table 'records', adding the 
         Creation and Modification date (Depends if the record already exists)
 
@@ -61,7 +62,7 @@ class Records():
             conn.close()
         else:
             cur.execute("INSERT INTO records(Name, DateC, DateM, Tickets, Total, SubTotal, IVA)" \
-                        "VALUES (?,?,?,?,?,?,?)", (name, now_date, "No aplica", 
+                        "VALUES (?,?,?,?,?,?,?)", (name, now_date, "", 
                                                    tickets, total, sub_total, iva))
             conn.commit()
             cur.close()
@@ -83,6 +84,11 @@ class Records():
             return False
         else:
             return True
+        
+    def load_records(self) -> pd.DataFrame:
+        conn = db.connect(self.db_file)
+        data = pd.read_sql_query("SELECT * FROM records", conn)
+        return data
     
         
 Records().create_table()

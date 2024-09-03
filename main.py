@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
-    QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox, QMenu
+    QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox
 from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator
 from PySide6.QtCore import Qt
 from tickets import Tickets
@@ -238,6 +238,7 @@ class MainWindow(QMainWindow):
                                               "Total", "Sub-Total", "IVA"))
         self.table.verticalHeader().setVisible(False)
         #self.table.doubleClicked.connect(self.edit_ticket)
+        self.load_records()
         # Set custom columns width
         col_widths = (30,250,120,130,70,70,70,70)
         for col, width in zip(range(0,8), col_widths):
@@ -254,6 +255,18 @@ class MainWindow(QMainWindow):
                                   self.remove_record_action, 
                                   self.edit_record_action,
                                   self.export_record_action))
+        
+    def load_records(self):
+        """
+        Loads the records data into the main window table
+        """
+        self.table.setRowCount(0)
+        for index, row in self.tickets.records.data.iterrows():
+            self.table.insertRow(index)
+            for column_number, cell_data in enumerate(row):
+                self.table.setItem(index, column_number,
+                                   QTableWidgetItem(str(cell_data)))
+        self.table.scrollToBottom()
         
           
 class AddTicketDialog(QDialog):
