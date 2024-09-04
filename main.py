@@ -25,9 +25,9 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
         
         # Menu bar
-        file_menu_item = self.menuBar().addMenu("&Archivo")
-        records_menu_item = self.menuBar().addMenu("&Registros")
-        help_menu_item = self.menuBar().addMenu("&Ayuda")
+        self.file_menu_item = self.menuBar().addMenu("&Archivo")
+        self.records_menu_item = self.menuBar().addMenu("&Registros")
+        self.help_menu_item = self.menuBar().addMenu("&Ayuda")
         
         # Actions
         # --> Tickets actions
@@ -67,7 +67,7 @@ class MainWindow(QMainWindow):
         self.export_record_action = QAction(QIcon("Media\\action_icons\\export.png"),
                                             "Exportar registro", self)
         
-        self.path_records_action = QAction("Ruta de guardado", self)
+        self.path_records_action = QAction("Ruta de exportado", self)
         
         # --> Help actions
         self.guide_help_action = QAction("Guía de uso", self)
@@ -75,34 +75,7 @@ class MainWindow(QMainWindow):
         self.repo_help_action = QAction("Repositorio (GitHub)", self)
         
         self.blushed_help_action = QAction("BlushedNanis", self)
-        
-        
-        
-        # Menu bar actions
-        # --> File actions
-        file_menu_item.addAction(self.new_record_action)
-        file_menu_item.addAction(self.save_record_action)
-        file_menu_item.addAction(self.export_record_action)
-        file_menu_item.addSeparator()
-        file_menu_item.addAction(self.add_tickets_action)
-        file_menu_item.addAction(self.remove_ticket_action)
-        file_menu_item.addAction(self.edit_ticket_action)
-        # Hide icons in file menu
-        for action in file_menu_item.actions():
-            action.setIconVisibleInMenu(False)
-        
-        # --> Records actions
-        records_menu_item.addAction(self.view_records_action)
-        records_menu_item.addAction(self.path_records_action)
-        # Hide icons in records menu
-        for action in records_menu_item.actions():
-            action.setIconVisibleInMenu(False)
-        
-        # --> Help actions
-        help_menu_item.addAction(self.guide_help_action)
-        help_menu_item.addAction(self.repo_help_action)
-        help_menu_item.addAction(self.blushed_help_action)
-        
+
         # Toolbar
         self.tool_bar = QToolBar()
         self.tool_bar.setMovable(True)
@@ -118,7 +91,8 @@ class MainWindow(QMainWindow):
         
     def show_tickets_window(self):
         """
-        Shows the tickets on the table widget and also the related toolbar
+        Shows the tickets on the table widget and also the related toolbar and 
+        menubar
         """
         self.setWindowTitle("Desglosador de Casetas")
         self.resize(600, 600)
@@ -136,10 +110,11 @@ class MainWindow(QMainWindow):
         for col, width in zip(range(0,5), col_widths):
             self.table.setColumnWidth(col,width)
         self.show_tickets_toolbar()
+        self.show_tickets_menubar()
             
     def show_tickets_toolbar(self):
         """
-        Shows the toolbar for the tickets table
+        Shows the toolbar for the tickets window
         """
         self.tool_bar.clear()
         self.tool_bar.addActions((self.add_tickets_action,
@@ -149,6 +124,37 @@ class MainWindow(QMainWindow):
         self.tool_bar.addActions((self.save_record_action,
                                   self.export_record_action,
                                   self.view_records_action))
+        
+    def show_tickets_menubar(self):
+        """
+        Shows the menubar for the tickets window
+        """
+        
+        # --> File actions
+        self.file_menu_item.addAction(self.new_record_action)
+        self.file_menu_item.addAction(self.save_record_action)
+        self.file_menu_item.addAction(self.export_record_action)
+        self.file_menu_item.addSeparator()
+        self.file_menu_item.addAction(self.add_tickets_action)
+        self.file_menu_item.addAction(self.remove_ticket_action)
+        self.file_menu_item.addAction(self.edit_ticket_action)
+        # Hide icons in file menu
+        for action in self.file_menu_item.actions():
+            action.setIconVisibleInMenu(False)
+        
+        self.records_menu_item.clear()
+        # --> Records actions
+        self.records_menu_item.addAction(self.view_records_action)
+        self.records_menu_item.addAction(self.path_records_action)
+        # Hide icons in records menu
+        for action in self.records_menu_item.actions():
+            action.setIconVisibleInMenu(False)
+        
+        self.help_menu_item.clear()
+        # --> Help actions
+        self.help_menu_item.addAction(self.guide_help_action)
+        self.help_menu_item.addAction(self.repo_help_action)
+        self.help_menu_item.addAction(self.blushed_help_action)
         
     def load_tickets(self):
         """
@@ -235,7 +241,8 @@ class MainWindow(QMainWindow):
         
     def show_records_window(self):
         """
-        Shows the records on the table widget and also the related toolbar.
+        Shows the records on the table widget and also the related toolbar and
+        menubar
         """
         self.setWindowTitle("Explorador de registros")
         self.resize(900,600)
@@ -254,8 +261,8 @@ class MainWindow(QMainWindow):
         col_widths = (30,250,120,130,70,70,70,70)
         for col, width in zip(range(0,8), col_widths):
             self.table.setColumnWidth(col,width)
-        self.menuBar().hide()
         self.show_records_toolbar()
+        self.show_records_menubar()
         
     def show_records_toolbar(self):
         """
@@ -266,6 +273,33 @@ class MainWindow(QMainWindow):
                                   self.remove_record_action, 
                                   self.open_record_action,
                                   self.export_record_action))
+        
+    def show_records_menubar(self):
+        """
+        Shows the menubar for the records window
+        """
+        self.file_menu_item.clear()
+        # --> File actions
+        self.file_menu_item.addAction(self.new_record_action)
+        self.file_menu_item.addSeparator()
+        self.file_menu_item.addAction(self.remove_record_action)
+        self.file_menu_item.addAction(self.open_record_action)
+        # Hide icons in file menu
+        for action in self.file_menu_item.actions():
+            action.setIconVisibleInMenu(False)
+        
+        self.records_menu_item.clear()
+        # --> Records actions
+        self.records_menu_item.addAction(self.export_record_action)
+        # Hide icons in records menu
+        for action in self.records_menu_item.actions():
+            action.setIconVisibleInMenu(False)
+        
+        self.help_menu_item.clear()
+        # --> Help actions
+        self.help_menu_item.addAction(self.guide_help_action)
+        self.help_menu_item.addAction(self.repo_help_action)
+        self.help_menu_item.addAction(self.blushed_help_action)
         
     def load_records(self):
         """
