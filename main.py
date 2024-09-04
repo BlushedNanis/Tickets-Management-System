@@ -22,9 +22,7 @@ class MainWindow(QMainWindow):
         self.float_validator = QRegularExpressionValidator("^\\d+(\\.\\d+)?$")
         
         # Window config
-        self.setWindowTitle("Desglosador de Casetas")
         self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
-        self.resize(600, 600)
         
         # Menu bar
         file_menu_item = self.menuBar().addMenu("&Archivo")
@@ -48,10 +46,11 @@ class MainWindow(QMainWindow):
         # --> Records actions
         self.view_records_action = QAction(QIcon("Media\\action_icons\\view.png"),
                                            "Ver registros", self)
-        self.view_records_action.triggered.connect(self.show_records_table)
+        self.view_records_action.triggered.connect(self.show_records_window)
         
-        self.add_record_action = QAction(QIcon("Media\\action_icons\\add.png"),
+        self.new_record_action = QAction(QIcon("Media\\action_icons\\add.png"),
                                                "Nuevo registro", self)
+        self.new_record_action.triggered.connect(self.new_record)
         
         self.remove_record_action = QAction(QIcon("Media\\action_icons\\remove.png"),
                                             "Eliminar registro", self)
@@ -79,7 +78,7 @@ class MainWindow(QMainWindow):
         
         # Menu bar actions
         # --> File actions
-        file_menu_item.addAction(self.add_record_action)
+        file_menu_item.addAction(self.new_record_action)
         file_menu_item.addAction(self.save_record_action)
         file_menu_item.addAction(self.export_record_action)
         file_menu_item.addSeparator()
@@ -102,25 +101,27 @@ class MainWindow(QMainWindow):
         help_menu_item.addAction(self.repo_help_action)
         help_menu_item.addAction(self.blushed_help_action)
         
-        # Table (Central Widget) config
-        self.table = QTableWidget()
-        self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.setCentralWidget(self.table)
-        self.show_tickets_table() # Show tickets table by default
-        
         # Toolbar
         self.tool_bar = QToolBar()
         self.tool_bar.setMovable(True)
         self.tool_bar.setFloatable(False)
         self.tool_bar.setStyleSheet("QToolBar{spacing: 5px; padding: 5px;}")
         self.addToolBar(Qt.BottomToolBarArea,self.tool_bar)
-        self.show_tickets_toolbar() # Show tickets toolbar by default
         
+        # Table (Central Widget) config
+        self.table = QTableWidget()
+        self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.setCentralWidget(self.table)
+        self.show_tickets_window() # Show tickets table by default
         
-    def show_tickets_table(self):
+    def show_tickets_window(self):
         """
-        Shows the tickets on the table widget
+        Shows the tickets on the table widget and also the related toolbar
         """
+        self.setWindowTitle("Desglosador de Casetas")
+        self.resize(600, 600)
+        self.table.clear()
+        self.table.setRowCount(0)
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(("ID", "Caseta", "Total", 
                                               "Sub-Total", "IVA"))
@@ -130,11 +131,13 @@ class MainWindow(QMainWindow):
         col_widths = (30,300,70,70,70)
         for col, width in zip(range(0,5), col_widths):
             self.table.setColumnWidth(col,width)
+        self.show_tickets_toolbar()
             
     def show_tickets_toolbar(self):
         """
         Shows the toolbar for the tickets table
         """
+        self.tool_bar.clear()
         self.tool_bar.addActions((self.add_tickets_action,
                                   self.remove_ticket_action, 
                                   self.edit_ticket_action))
@@ -226,10 +229,11 @@ class MainWindow(QMainWindow):
             self.dialog = SaveRecordDialog()
             self.dialog.exec()
         
-    def show_records_table(self):
+    def show_records_window(self):
         """
-        Shows the records on the table widget
+        Shows the records on the table widget and also the related toolbar.
         """
+        self.setWindowTitle("Explorador de registros")
         self.resize(900,600)
         self.table.clear()
         self.table.setColumnCount(8)
@@ -251,7 +255,7 @@ class MainWindow(QMainWindow):
         Shows the toolbar for the records table
         """
         self.tool_bar.clear()
-        self.tool_bar.addActions((self.add_record_action,
+        self.tool_bar.addActions((self.new_record_action,
                                   self.remove_record_action, 
                                   self.edit_record_action,
                                   self.export_record_action))
@@ -268,6 +272,9 @@ class MainWindow(QMainWindow):
                 self.table.setItem(index, column_number,
                                    QTableWidgetItem(str(cell_data)))
         self.table.scrollToBottom()
+        
+    def new_record(self):
+        self.show_tickets_window()
         
           
 class AddTicketDialog(QDialog):
