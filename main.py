@@ -129,6 +129,7 @@ class MainWindow(QMainWindow):
         self.table.setHorizontalHeaderLabels(("ID", "Caseta", "Total", 
                                               "Sub-Total", "IVA"))
         self.table.verticalHeader().setVisible(False)
+        self.table.doubleClicked.disconnect()
         self.table.doubleClicked.connect(self.edit_ticket)
         # Set custom columns width
         col_widths = (30,300,70,70,70)
@@ -239,6 +240,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Explorador de registros")
         self.resize(900,600)
         self.tickets.clear_data()
+        self.table.doubleClicked.disconnect()
+        self.table.doubleClicked.connect(self.open_record)
         self.table.clear()
         self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels(("ID", "Registro", "Fecha de guardado", 
