@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.edit_ticket_action.triggered.connect(self.edit_ticket)
         
         # --> Records actions
-        self.view_records_action = QAction(QIcon("Media\\action_icons\\search.png"),
+        self.view_records_action = QAction(QIcon("Media\\action_icons\\view.png"),
                                            "Ver registros", self)
         self.view_records_action.triggered.connect(self.show_records_table)
         
