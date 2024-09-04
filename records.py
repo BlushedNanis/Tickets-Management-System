@@ -4,11 +4,14 @@ from time import strftime
 import pandas as pd
 
 
+DIRECTORY = environ["USERPROFILE"] + "\\.tickets"
+if not path.exists(DIRECTORY):
+    mkdir(DIRECTORY)
+    
+    
 class Records():
     def __init__(self) -> None:
-        #self.db_file = directory + "\\records.db"
-        self.db_file = "records.db"
-        self.data = self.load_records()
+        self.db_file = DIRECTORY + "\\records.db"
         
     def create_table(self) -> None:
         """
@@ -85,10 +88,10 @@ class Records():
         else:
             return True
         
-    def load_records(self) -> pd.DataFrame:
+    def load_records(self) -> None:
+        """
+        Loads the records table into the variable data.
+        """
         conn = db.connect(self.db_file)
-        data = pd.read_sql_query("SELECT * FROM records", conn)
-        return data
-    
-        
-Records().create_table()
+        self.data = pd.read_sql_query("SELECT * FROM records", conn)
+        conn.close()

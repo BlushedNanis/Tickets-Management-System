@@ -3,17 +3,17 @@ import sqlite3 as db
 from os import environ, path, mkdir
 from records import Records
 
-directory = environ["USERPROFILE"] + "\\.tickets"
-if not path.exists(directory):
-    mkdir(directory)
+DIRECTORY = environ["USERPROFILE"] + "\\.tickets"
+if not path.exists(DIRECTORY):
+    mkdir(DIRECTORY)
 
 class Tickets():
     def __init__(self) -> None:
         self.data = pd.DataFrame(columns=["ID", "Toll", "Total", "Sub-Total", "IVA"])
         self.data["ID"] = self.data.index
-        #self.db_file = directory + "\\records.db"
-        self.db_file = "records.db"
+        self.db_file = DIRECTORY + "\\records.db"
         self.records = Records()
+        self.records.create_table()
         
     def add_ticket(self, ticket_name:str, ticket_total:float):
         """

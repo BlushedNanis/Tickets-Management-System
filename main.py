@@ -261,6 +261,7 @@ class MainWindow(QMainWindow):
         Loads the records data into the main window table
         """
         self.table.setRowCount(0)
+        self.tickets.records.load_records()
         for index, row in self.tickets.records.data.iterrows():
             self.table.insertRow(index)
             for column_number, cell_data in enumerate(row):
