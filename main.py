@@ -56,8 +56,8 @@ class MainWindow(QMainWindow):
                                             "Eliminar registro", self)
         self.remove_record_action.triggered.connect(self.remove_record)
         
-        self.edit_record_action = QAction(QIcon("Media\\action_icons\\edit.png"),
-                                          "Editar registro", self)
+        self.open_record_action = QAction(QIcon("Media\\action_icons\\open.png"),
+                                          "Abrir registro", self)
         
         self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
                                           "Guardar registro", self)
@@ -237,6 +237,7 @@ class MainWindow(QMainWindow):
         """
         self.setWindowTitle("Explorador de registros")
         self.resize(900,600)
+        self.tickets.clear_data()
         self.table.clear()
         self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels(("ID", "Registro", "Fecha de guardado", 
@@ -259,7 +260,7 @@ class MainWindow(QMainWindow):
         self.tool_bar.clear()
         self.tool_bar.addActions((self.new_record_action,
                                   self.remove_record_action, 
-                                  self.edit_record_action,
+                                  self.open_record_action,
                                   self.export_record_action))
         
     def load_records(self):
@@ -586,7 +587,7 @@ class RemoveRecordDialog(QDialog):
         main_window.tickets.records.remove_record(self.record_name)
         main_window.load_records()
         self.close()
-        
+
 
 if __name__ == "__main__":
     app = QApplication(argv)
