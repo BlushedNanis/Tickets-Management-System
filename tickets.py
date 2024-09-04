@@ -83,6 +83,18 @@ class Tickets():
         """
         self.data = self.data.drop(range(1,len(self.data)+1))
         
+    def fetch_record(self, record_name:str) -> None:
+        """Fetch the record with the given name and assign it to the tickets
+        data (DataFrame) variable
+
+        Args:
+            record_name (str):  Name of the record
+        """
+        conn = db.connect(self.db_file)
+        self.data = pd.read_sql_query(f"SELECT * FROM {record_name}", conn)
+        self.data.index = self.data["ID"].values
+        conn.close()
+        
         
 if __name__ == "__main__":
     t = Tickets()

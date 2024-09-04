@@ -58,6 +58,7 @@ class MainWindow(QMainWindow):
         
         self.open_record_action = QAction(QIcon("Media\\action_icons\\open.png"),
                                           "Abrir registro", self)
+        self.open_record_action.triggered.connect(self.open_record)
         
         self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
                                           "Guardar registro", self)
@@ -286,6 +287,16 @@ class MainWindow(QMainWindow):
         if self.table.currentItem() is not None:
             self.dialog = RemoveRecordDialog()
             self.dialog.exec()
+            
+    def open_record(self):
+        """
+        Loads the selected record on the table, into the tickets table.
+        """
+        if self.table.currentItem() is not None:
+            record_name = self.table.item(self.table.currentRow(), 1).text()
+            self.tickets.fetch_record(record_name)
+            self.show_tickets_window()
+            self.load_tickets()
         
           
 class AddTicketDialog(QDialog):
