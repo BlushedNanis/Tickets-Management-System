@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         
         # Window config
         self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
+        self.setMinimumSize(300, 200)
         
         # Menu bar
         self.file_menu_item = self.menuBar().addMenu("&Archivo")
