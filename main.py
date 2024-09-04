@@ -120,6 +120,7 @@ class MainWindow(QMainWindow):
         """
         self.setWindowTitle("Desglosador de Casetas")
         self.resize(600, 600)
+        self.menuBar().show()
         self.table.clear()
         self.table.setRowCount(0)
         self.table.setColumnCount(5)
