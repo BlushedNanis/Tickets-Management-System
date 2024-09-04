@@ -54,6 +54,7 @@ class MainWindow(QMainWindow):
         
         self.remove_record_action = QAction(QIcon("Media\\action_icons\\remove.png"),
                                             "Eliminar registro", self)
+        self.remove_record_action.triggered.connect(self.remove_record)
         
         self.edit_record_action = QAction(QIcon("Media\\action_icons\\edit.png"),
                                           "Editar registro", self)
@@ -276,6 +277,14 @@ class MainWindow(QMainWindow):
         
     def new_record(self):
         self.show_tickets_window()
+        
+    def remove_record(self):
+        """
+        Executes the Remove Record Dialog if the current item is not None
+        """
+        if self.table.currentItem() is not None:
+            self.dialog = RemoveRecordDialog()
+            self.dialog.exec()
         
           
 class AddTicketDialog(QDialog):
@@ -534,6 +543,49 @@ class SaveRecordDialog(QDialog):
         """
         main_window.table.setRowCount(0)
         main_window.tickets.clear_data()
+        
+        
+class RemoveRecordDialog(QDialog):
+    """
+    QDialog to remove an specific record from the database.
+    The record to be removed will be the one selected from the user on the table.
+    """
+    def __init__(self):
+        super().__init__()
+        # Dialog config
+        self.setWindowIcon(QIcon("Media\\action_icons\\remove.png"))
+        self.setWindowTitle("Eliminar registro")
+        self.setFixedSize(270,100)
+        layout = QGridLayout()
+        
+        # Get the ticket ID, based on the selected row on the table
+        self.record_name = main_window.table.item(main_window.table.currentRow(),
+                                                  1).text()
+        
+        # Dialog widgets
+        label = QLabel("¿Estás seguro que deseas eliminar este registro?")
+        layout.addWidget(label, 0, 0, 1, 2)
+        
+        ticket_label = QLabel(f"Registro: {self.record_name}")
+        layout.addWidget(ticket_label, 1, 0, 1, 2, Qt.AlignmentFlag.AlignHCenter)
+        
+        yes_button = QPushButton("Si")
+        yes_button.clicked.connect(self.remove_record)
+        layout.addWidget(yes_button, 2, 0)
+        
+        no_button = QPushButton("No")
+        no_button.clicked.connect(self.close)
+        layout.addWidget(no_button, 2, 1)
+        
+        self.setLayout(layout)
+        
+    def remove_record(self):
+        """
+        Removes the selected record from the database and updates the table.
+        """
+        main_window.tickets.records.remove_record(self.record_name)
+        main_window.load_records()
+        self.close()
         
 
 if __name__ == "__main__":

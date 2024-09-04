@@ -95,3 +95,18 @@ class Records():
         conn = db.connect(self.db_file)
         self.data = pd.read_sql_query("SELECT * FROM records", conn)
         conn.close()
+
+    def remove_record(self, record_name:str) -> None:
+        """Removes the given record from the database and also from the records 
+        table.
+
+        Args:
+            record_name (str): Name of the record to be removed.
+        """
+        conn = db.connect(self.db_file)
+        cur = conn.cursor()
+        cur.execute(f"DROP TABLE {record_name}")
+        cur.execute("DELETE FROM 'records' WHERE Name==?", (record_name,))
+        conn.commit()
+        cur.close()
+        conn.close()
