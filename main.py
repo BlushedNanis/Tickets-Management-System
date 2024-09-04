@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         # --> Records actions
         self.view_records_action = QAction(QIcon("Media\\action_icons\\view.png"),
                                            "Ver registros", self)
-        self.view_records_action.triggered.connect(self.show_records_window)
+        self.view_records_action.triggered.connect(self.view_records)
         
         self.new_record_action = QAction(QIcon("Media\\action_icons\\add.png"),
                                                "Nuevo registro", self)
@@ -88,7 +88,7 @@ class MainWindow(QMainWindow):
         self.table = QTableWidget()
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setCentralWidget(self.table)
-        self.show_tickets_window() # Show tickets table by default
+        self.show_tickets_window() # Show the tickets window by default
         
     def show_tickets_window(self):
         """
@@ -315,6 +315,18 @@ class MainWindow(QMainWindow):
                                    QTableWidgetItem(str(cell_data)))
         self.table.scrollToBottom()
         
+    def view_records(self):
+        """
+        Executes the View Records Dialog if the user have already registered
+        tickets. If the table is empty then will show the records window
+        directly
+        """
+        if self.table.rowCount() == 0:
+            self.show_records_window()
+        else:
+            self.dialog = ViewRecordsDialog()
+            self.dialog.exec()
+        
     def new_record(self):
         self.show_tickets_window()
         
@@ -328,7 +340,8 @@ class MainWindow(QMainWindow):
             
     def open_record(self):
         """
-        Loads the selected record on the table, into the tickets table.
+        Loads the selected record on the table, into the tickets table. If the
+        current item is not None
         """
         if self.table.currentItem() is not None:
             record_name = self.table.item(self.table.currentRow(), 1).text()
@@ -543,6 +556,45 @@ class EditTicketDialog(QDialog):
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
+        
+        
+class ViewRecordsDialog(QDialog):
+    """
+    QDialog to confirm that the user wants to change from the tickets to the
+    records window, with a warning about loosing the tickets in the current
+    window
+    """
+    def __init__(self):
+        super().__init__()
+        # Dialog config
+        self.setWindowIcon(QIcon("Media\\action_icons\\view.png"))
+        self.setWindowTitle("Ver registros")
+        self.setFixedSize(250,130)
+        layout = QGridLayout()
+        
+        # Dialog widgets
+        ticket_name_label = QLabel("Al continuar los tickets registrados en \n"\
+                                   "la tabla serán eliminados.\n\n"\
+                                   "¿Estás seguro de que deseas continuar?")
+        ticket_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(ticket_name_label, 1, 0, 1, 2)
+        
+        save_button = QPushButton("Si")
+        save_button.clicked.connect(self.show_records)
+        layout.addWidget(save_button, 6, 0)
+        
+        cancel_button = QPushButton("No")
+        cancel_button.clicked.connect(self.close)
+        layout.addWidget(cancel_button, 6, 1)
+        
+        self.setLayout(layout)
+        
+    def show_records(self):
+        """
+        Shows the records window in the main window.
+        """
+        main_window.show_records_window()
+        self.close()
         
         
 class SaveRecordDialog(QDialog):
