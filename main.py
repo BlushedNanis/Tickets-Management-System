@@ -1,9 +1,11 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
-    QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox
+    QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox, \
+    QFileDialog, QComboBox
 from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator
 from PySide6.QtCore import Qt
 from tickets import Tickets
+from export import EXPORT
 from sys import argv, exit
 
 
@@ -14,6 +16,8 @@ class MainWindow(QMainWindow):
     """
     def __init__(self):
         super().__init__()
+        
+        self.export = EXPORT()
         
         # Create the tickets instance
         self.create_tickets()
@@ -44,6 +48,10 @@ class MainWindow(QMainWindow):
                                           "Editar caseta", self)
         self.edit_ticket_action.triggered.connect(self.edit_ticket)
         
+        self.export_tickets_action = QAction(QIcon("Media\\action_icons\\export.png"),
+                                            "Exportar tickets", self)
+        self.export_tickets_action.triggered.connect(self.export_tickets)
+        
         # --> Records actions
         self.view_records_action = QAction(QIcon("Media\\action_icons\\view.png"),
                                            "Ver registros", self)
@@ -64,9 +72,6 @@ class MainWindow(QMainWindow):
         self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
                                           "Guardar registro", self)
         self.save_record_action.triggered.connect(self.save_record)
-        
-        self.export_record_action = QAction(QIcon("Media\\action_icons\\export.png"),
-                                            "Exportar registro", self)
         
         self.path_records_action = QAction("Ruta de exportado", self)
         
@@ -123,18 +128,17 @@ class MainWindow(QMainWindow):
                                   self.edit_ticket_action))
         self.tool_bar.addSeparator()
         self.tool_bar.addActions((self.save_record_action,
-                                  self.export_record_action,
+                                  self.export_tickets_action,
                                   self.view_records_action))
         
     def show_tickets_menubar(self):
         """
         Shows the menubar for the tickets window
         """
-        
+        self.file_menu_item.clear()
         # --> File actions
-        self.file_menu_item.addAction(self.new_record_action)
         self.file_menu_item.addAction(self.save_record_action)
-        self.file_menu_item.addAction(self.export_record_action)
+        self.file_menu_item.addAction(self.export_tickets_action)
         self.file_menu_item.addSeparator()
         self.file_menu_item.addAction(self.add_tickets_action)
         self.file_menu_item.addAction(self.remove_ticket_action)
@@ -143,7 +147,7 @@ class MainWindow(QMainWindow):
         for action in self.file_menu_item.actions():
             action.setIconVisibleInMenu(False)
         
-        self.records_menu_item.clear()
+        self.menuBar().addAction(self.records_menu_item.menuAction())
         # --> Records actions
         self.records_menu_item.addAction(self.view_records_action)
         self.records_menu_item.addAction(self.path_records_action)
@@ -151,6 +155,7 @@ class MainWindow(QMainWindow):
         for action in self.records_menu_item.actions():
             action.setIconVisibleInMenu(False)
         
+        self.menuBar().addAction(self.help_menu_item.menuAction())
         self.help_menu_item.clear()
         # --> Help actions
         self.help_menu_item.addAction(self.guide_help_action)
@@ -272,8 +277,7 @@ class MainWindow(QMainWindow):
         self.tool_bar.clear()
         self.tool_bar.addActions((self.new_record_action,
                                   self.remove_record_action, 
-                                  self.open_record_action,
-                                  self.export_record_action))
+                                  self.open_record_action))
         
     def show_records_menubar(self):
         """
@@ -289,12 +293,7 @@ class MainWindow(QMainWindow):
         for action in self.file_menu_item.actions():
             action.setIconVisibleInMenu(False)
         
-        self.records_menu_item.clear()
-        # --> Records actions
-        self.records_menu_item.addAction(self.export_record_action)
-        # Hide icons in records menu
-        for action in self.records_menu_item.actions():
-            action.setIconVisibleInMenu(False)
+        self.menuBar().removeAction(self.records_menu_item.menuAction())
         
         self.help_menu_item.clear()
         # --> Help actions
@@ -348,6 +347,15 @@ class MainWindow(QMainWindow):
             self.tickets.fetch_record(record_name)
             self.show_tickets_window()
             self.load_tickets()
+            
+    def export_tickets(self):
+        """
+        Executes the Export Tickets Dialog if the table is not empty.
+        """
+        if self.table.rowCount() != 0:
+            self.dialog = ExportTicketsDialog()
+            self.dialog.exec()
+            
         
           
 class AddTicketDialog(QDialog):
@@ -688,6 +696,81 @@ class RemoveRecordDialog(QDialog):
         main_window.tickets.records.remove_record(self.record_name)
         main_window.load_records()
         self.close()
+        
+    
+class ExportTicketsDialog(QDialog):
+    """
+    QDialog to export the current list of tickets in the main window table.
+    The user is be able to choose the name of the file, directory and 
+    type of file to export.
+    """
+    def __init__(self):
+        super().__init__()
+        
+        self.directory_path = main_window.export.path
+        
+        # Dialog config
+        self.setWindowIcon(QIcon("Media\\action_icons\\export.png"))
+        self.setWindowTitle("Exportar tickets")
+        self.setFixedSize(300,300)
+        layout = QGridLayout()
+        
+        # Dialog widgets
+        file_name_label = QLabel("Nombre:")
+        layout.addWidget(file_name_label, 0, 0, 1, 1)
+        
+        self.file_name = QLineEdit()
+        layout.addWidget(self.file_name, 0, 1, 1, 1)
+        
+        file_type_label = QLabel("Tipo de archivo:")
+        layout.addWidget(file_type_label, 2, 0,)
+        
+        self.file_type_box = QComboBox()
+        self.file_type_box.addItems(("CSV", "EXCEL", "PDF"))
+        layout.addWidget(self.file_type_box, 2, 1)
+        
+        self.path_label = QLabel(f"Ruta de exportado: {self.directory_path}")
+        layout.addWidget(self.path_label, 3, 0, 1, 2)
+        
+        file_path_button = QPushButton("Seleccionar ruta de exportado")
+        file_path_button.clicked.connect(self.select_path_dialog)
+        layout.addWidget(file_path_button, 4, 0, 2, 2)
+        
+        # Vertical spacing for buttons
+        layout.addItem(QSpacerItem(20,20), 7, 0, 1, 2)
+        
+        yes_button = QPushButton("Exportar")
+        yes_button.clicked.connect(self.export_tickets)
+        layout.addWidget(yes_button, 8, 0)
+        
+        no_button = QPushButton("Cancelar")
+        no_button.clicked.connect(self.close)
+        layout.addWidget(no_button, 8, 1)
+        
+        self.setLayout(layout)
+        
+    def select_path_dialog(self):
+        """
+        Opens a QFileDialog for the user to choose a directory to export.
+        """
+        self.directory_path = QFileDialog().getExistingDirectory()
+        self.path_label.setText(f"Ruta de exportado: {self.directory_path}")
+        
+    def export_tickets(self):
+        """
+        Exports the list of tickets in the main window table in the selected 
+        type of file and directory.
+        """
+        file_type = self.file_type_box.currentIndex()
+        file_name = self.file_name.text()
+        
+        if file_type == 0:
+            main_window.export.to_csv(main_window.tickets.data, self.directory_path, file_name)
+            self.close()
+        elif file_type == 1:
+            pass
+        else:
+            pass
 
 
 if __name__ == "__main__":
