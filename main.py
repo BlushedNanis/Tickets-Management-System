@@ -770,12 +770,15 @@ class ExportTicketsDialog(QDialog):
             if file_type == 0:
                 main_window.export.to_csv(main_window.tickets.data, self.directory_path, file_name)
                 self.close()
+                self.succes_message()
             elif file_type == 1:
                 main_window.export.to_excel(main_window.tickets.data, self.directory_path, file_name)
                 self.close()
+                self.succes_message()
             else:
                 main_window.export.to_pdf(main_window.tickets.data, self.directory_path, file_name)
                 self.close()
+                self.succes_message()
             
     def value_warning(self):
         """
@@ -788,6 +791,15 @@ class ExportTicketsDialog(QDialog):
         value_message.setText("Ooops, parece que te faltó ingresar el nombre")
         value_message.exec()
 
+    def succes_message(self):
+            """
+            QMessageBox to let the user know that the export has been succesful.
+            """
+            value_message = QMessageBox()
+            value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
+            value_message.setWindowTitle("Exportación exitosa")
+            value_message.setText("El archivo ha sido exportado exitosamente!")
+            value_message.exec()
         
 if __name__ == "__main__":
     app = QApplication(argv)
