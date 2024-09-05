@@ -792,14 +792,14 @@ class ExportTicketsDialog(QDialog):
         value_message.exec()
 
     def succes_message(self):
-            """
-            QMessageBox to let the user know that the export has been succesful.
-            """
-            value_message = QMessageBox()
-            value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
-            value_message.setWindowTitle("Exportación exitosa")
-            value_message.setText("El archivo ha sido exportado exitosamente!")
-            value_message.exec()
+        """
+        QMessageBox to let the user know that the export has been succesful.
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
+        value_message.setWindowTitle("Exportación exitosa")
+        value_message.setText("El archivo ha sido exportado exitosamente!")
+        value_message.exec()
         
 if __name__ == "__main__":
     app = QApplication(argv)
