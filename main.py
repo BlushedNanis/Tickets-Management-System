@@ -768,7 +768,8 @@ class ExportTicketsDialog(QDialog):
             main_window.export.to_csv(main_window.tickets.data, self.directory_path, file_name)
             self.close()
         elif file_type == 1:
-            pass
+            main_window.export.to_excel(main_window.tickets.data, self.directory_path, file_name)
+            self.close()
         else:
             pass
 

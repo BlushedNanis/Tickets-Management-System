@@ -10,18 +10,31 @@ class EXPORT():
     def __init__(self):
         self.path = DIRECTORY
         
-    def to_csv(self, data:pd.DataFrame, path, file_name) -> None:
+    def to_csv(self, data:pd.DataFrame, path:str, file_name:str) -> None:
         """Exports the given data (tickets) with the given name into the given
         directory as a csv file. Also adds a a row at the end with the summary
         of the data.
 
         Args:
             data (pd.DataFrame): Data to be exported
-            path (_type_): Directory where the file will be saved
-            file_name (_type_): Name of the file to export
+            path (str): Directory where the file will be saved
+            file_name (str): Name of the file to export
         """
         data_to_export = self.prepare_data(data)
         data_to_export.to_csv(path + "\\" + file_name + ".csv", index=False)
+        
+    def to_excel(self, data:pd.DataFrame, path:str, file_name:str) -> None:
+        """Exports the given data (tickets) with the given name into the given
+        directory as a xlsx file. Also adds a a row at the end with the summary
+        of the data.
+
+        Args:
+            data (pd.DataFrame): Data to be exported
+            path (str): Directory where the file will be saved
+            file_name (str): Name of the file to export
+        """
+        data_to_export = self.prepare_data(data)
+        data_to_export.to_excel(path + "\\" + file_name + ".xlsx", index=False)
         
     def prepare_data(self, data:pd.DataFrame) -> pd.DataFrame:
         """Prepares the data (tickets) to be exported, adding a new row with 
