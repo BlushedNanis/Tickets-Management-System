@@ -771,7 +771,8 @@ class ExportTicketsDialog(QDialog):
             main_window.export.to_excel(main_window.tickets.data, self.directory_path, file_name)
             self.close()
         else:
-            pass
+            main_window.export.to_pdf(main_window.tickets.data, self.directory_path, file_name)
+            self.close()
 
 
 if __name__ == "__main__":
