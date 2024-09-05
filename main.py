@@ -761,20 +761,34 @@ class ExportTicketsDialog(QDialog):
         Exports the list of tickets in the main window table in the selected 
         type of file and directory.
         """
-        file_type = self.file_type_box.currentIndex()
-        file_name = self.file_name.text()
-        
-        if file_type == 0:
-            main_window.export.to_csv(main_window.tickets.data, self.directory_path, file_name)
-            self.close()
-        elif file_type == 1:
-            main_window.export.to_excel(main_window.tickets.data, self.directory_path, file_name)
-            self.close()
+        if self.file_name.text() == "":
+            self.value_warning()
         else:
-            main_window.export.to_pdf(main_window.tickets.data, self.directory_path, file_name)
-            self.close()
+            file_type = self.file_type_box.currentIndex()
+            file_name = self.file_name.text()
+            
+            if file_type == 0:
+                main_window.export.to_csv(main_window.tickets.data, self.directory_path, file_name)
+                self.close()
+            elif file_type == 1:
+                main_window.export.to_excel(main_window.tickets.data, self.directory_path, file_name)
+                self.close()
+            else:
+                main_window.export.to_pdf(main_window.tickets.data, self.directory_path, file_name)
+                self.close()
+            
+    def value_warning(self):
+        """
+        QMessageBox to let the user know it's missing to input the name of the 
+        file.
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowTitle("Advertencia")
+        value_message.setText("Ooops, parece que te faltó ingresar el nombre")
+        value_message.exec()
 
-
+        
 if __name__ == "__main__":
     app = QApplication(argv)
     main_window = MainWindow()
