@@ -9,7 +9,7 @@ if not path.exists(DIRECTORY):
 
 class Tickets():
     def __init__(self) -> None:
-        self.data = pd.DataFrame(columns=["ID", "Toll", "Total", "Sub-Total", "IVA"])
+        self.data = pd.DataFrame(columns=["ID", "Ticket", "Total", "Sub-Total", "IVA"])
         self.data["ID"] = self.data.index
         self.db_file = DIRECTORY + "\\records.db"
         self.records = Records()
@@ -61,7 +61,7 @@ class Tickets():
         """
         self.summary = self.data.sum()
         self.summary["ID"] = ""
-        self.summary["Toll"] = "TOTAL"
+        self.summary["Ticket"] = "TOTAL"
         self.summary["Total"] = round(self.summary["Total"], 2)
         self.summary["Sub-Total"] = round(self.summary["Sub-Total"], 2)
         self.summary["IVA"] = round(self.summary["IVA"], 2)
