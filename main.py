@@ -52,6 +52,9 @@ class MainWindow(QMainWindow):
                                             "Exportar tickets", self)
         self.export_tickets_action.triggered.connect(self.export_tickets)
         
+        self.path_records_action = QAction("Ruta de exportado", self)
+        self.path_records_action.triggered.connect(self.change_export_path)
+        
         # --> Records actions
         self.view_records_action = QAction(QIcon("Media\\action_icons\\view.png"),
                                            "Ver registros", self)
@@ -72,8 +75,6 @@ class MainWindow(QMainWindow):
         self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
                                           "Guardar registro", self)
         self.save_record_action.triggered.connect(self.save_record)
-        
-        self.path_records_action = QAction("Ruta de exportado", self)
         
         # --> Help actions
         self.guide_help_action = QAction("Guía de uso", self)
@@ -355,6 +356,13 @@ class MainWindow(QMainWindow):
         if self.table.rowCount() != 0:
             self.dialog = ExportTicketsDialog()
             self.dialog.exec()
+            
+    def change_export_path(self):
+        """
+        
+        """
+        self.dialog = ChangeExportPath()
+        self.dialog.exec()
             
         
           
@@ -804,6 +812,76 @@ class ExportTicketsDialog(QDialog):
         value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
         value_message.setWindowTitle("Exportación exitosa")
         value_message.setText("El archivo ha sido exportado exitosamente!")
+        value_message.exec()
+        
+        
+class ChangeExportPath(QDialog):
+    """
+    QDialog to change the export directory
+    """
+    def __init__(self):
+        super().__init__()
+        
+        self.directory_path = main_window.export.path
+        
+        # Dialog config
+        self.setWindowIcon(QIcon("Media\\window_icon\\folder.png"))
+        self.setWindowTitle("Ruta de exportado")
+        self.setFixedSize(300,150)
+        layout = QGridLayout()
+        
+        # Dialog widgets
+        self.path_label = QLabel("Ruta:")
+        layout.addWidget(self.path_label, 1, 0, 1, 2)
+        
+        self.export_path = QLineEdit()
+        self.export_path.setReadOnly(True)
+        self.export_path.setText(self.directory_path)
+        layout.addWidget(self.export_path, 2, 0, 1, 2)
+        
+        directory_button = QPushButton("Seleccionar ruta")
+        directory_button.clicked.connect(self.select_path_dialog)
+        layout.addWidget(directory_button, 3, 0, 1, 2)
+        
+        # Vertical spacing for buttons
+        layout.addItem(QSpacerItem(20,20), 4, 0, 1, 2)
+        
+        yes_button = QPushButton("Aceptar")
+        yes_button.clicked.connect(self.change_export_path)
+        layout.addWidget(yes_button, 5, 0)
+        
+        no_button = QPushButton("Cancelar")
+        no_button.clicked.connect(self.close)
+        layout.addWidget(no_button, 5, 1)
+        
+        self.setLayout(layout)
+        
+    def select_path_dialog(self):
+        """
+        Opens a QFileDialog for the user to choose a directory to export.
+        """
+        self.directory_path = QFileDialog().getExistingDirectory()
+        self.export_path.setText(self.directory_path)
+        
+    def change_export_path(self):
+        """
+        Exports the list of tickets in the main window table in the selected 
+        type of file and directory.
+        """
+        main_window.export.change_export_path(self.export_path.text())
+        self.close()
+        self.succes_message()
+
+    def succes_message(self):
+        """
+        QMessageBox to let the user know that the export path has been 
+        succesfully changed.
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
+        value_message.setWindowTitle("Modificación exitosa")
+        value_message.setText("La ruta de exportado a cambiado a:\n"\
+                              f"{self.export_path.text()}")
         value_message.exec()
         
 if __name__ == "__main__":
