@@ -12,7 +12,7 @@ if not path.exists(DIRECTORY):
 class EXPORT():
     def __init__(self):
         self.path = DIRECTORY
-        self.create_path_table(self.path)
+        self.create_path_table()
         self.load_export_path()
         
     def to_csv(self, data:pd.DataFrame, path:str, file_name:str) -> None:
@@ -74,7 +74,7 @@ class EXPORT():
         for index, row in data_to_export.iterrows():
             pdf.ln(10)
             pdf.cell(37, 10, str(row["ID"]), 1, 0, "C")
-            pdf.cell(37, 10, str(row["Toll"]), 1, 0, "C")
+            pdf.cell(37, 10, str(row["Ticket"]), 1, 0, "C")
             pdf.cell(37, 10, str(row["Total"]), 1, 0, "C")
             pdf.cell(37, 10, str(row["Sub-Total"]), 1, 0, "C")
             pdf.cell(37, 10, str(row["IVA"]), 1, 0, "C")
@@ -93,7 +93,7 @@ class EXPORT():
         """
         summary = data.sum()
         summary["ID"] = ""
-        summary["Toll"] = "TOTAL"
+        summary["Ticket"] = "TOTAL"
         summary["Total"] = round(summary["Total"], 2)
         summary["Sub-Total"] = round(summary["Sub-Total"], 2)
         summary["IVA"] = round(summary["IVA"], 2)

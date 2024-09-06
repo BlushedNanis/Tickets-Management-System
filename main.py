@@ -37,15 +37,15 @@ class MainWindow(QMainWindow):
         # Actions
         # --> Tickets actions
         self.add_tickets_action = QAction(QIcon("Media\\action_icons\\add.png"),
-                                          "Agregar casetas", self)
+                                          "Agregar tickets", self)
         self.add_tickets_action.triggered.connect(self.add_tickets)
         
         self.remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"),
-                                            "Eliminar caseta", self)
+                                            "Eliminar ticket", self)
         self.remove_ticket_action.triggered.connect(self.remove_ticket)
         
         self.edit_ticket_action = QAction(QIcon("Media\\action_icons\\edit.png"),
-                                          "Editar caseta", self)
+                                          "Editar ticket", self)
         self.edit_ticket_action.triggered.connect(self.edit_ticket)
         
         self.export_tickets_action = QAction(QIcon("Media\\action_icons\\export.png"),
@@ -101,13 +101,13 @@ class MainWindow(QMainWindow):
         Shows the tickets on the table widget and also the related toolbar and 
         menubar
         """
-        self.setWindowTitle("Desglosador de Casetas")
+        self.setWindowTitle("Tickets Management System")
         self.resize(600, 600)
         self.menuBar().show()
         self.table.clear()
         self.table.setRowCount(0)
         self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(("ID", "Caseta", "Total", 
+        self.table.setHorizontalHeaderLabels(("ID", "Ticket", "Total", 
                                               "Sub-Total", "IVA"))
         self.table.verticalHeader().setVisible(False)
         self.table.doubleClicked.disconnect()
@@ -259,7 +259,7 @@ class MainWindow(QMainWindow):
         self.table.clear()
         self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels(("ID", "Registro", "Fecha de guardado", 
-                                              "Fecha de modificacion", "Casetas",
+                                              "Fecha de modificacion", "Tickets",
                                               "Total", "Sub-Total", "IVA"))
         self.table.verticalHeader().setVisible(False)
         #self.table.doubleClicked.connect(self.edit_ticket)
@@ -376,20 +376,20 @@ class AddTicketDialog(QDialog):
         super().__init__()
         # Dialog config
         self.setWindowIcon(QIcon("Media\\action_icons\\add.png"))
-        self.setWindowTitle("Agregar casetas")
+        self.setWindowTitle("Agregar tickets")
         self.setFixedSize(200,200)
         layout = QGridLayout()
         
         # Dialog widgets
-        self.ticket_id_label = QLabel("Caseta ID: "\
+        self.ticket_id_label = QLabel("Ticket ID: "\
                                       f"{len(main_window.tickets.data) + 1}")
         layout.addWidget(self.ticket_id_label, 0, 0, 1, 2, 
                          Qt.AlignmentFlag.AlignHCenter)
         
-        ticket_name_label = QLabel("Caseta:")
+        ticket_name_label = QLabel("Ticket:")
         layout.addWidget(ticket_name_label, 1, 0, 1, 2)
         
-        self.ticket_name = QLineEdit(f"Caseta {len(main_window.tickets.data) + 1}")
+        self.ticket_name = QLineEdit(f"Ticket {len(main_window.tickets.data) + 1}")
         layout.addWidget(self.ticket_name, 2, 0, 1, 2)
         
         ticket_total_label = QLabel("Total:")
@@ -430,9 +430,9 @@ class AddTicketDialog(QDialog):
             main_window.load_tickets()
             self.ticket_total.clear()
             self.ticket_total.setFocus()
-            self.ticket_id_label.setText("Caseta ID: "\
+            self.ticket_id_label.setText("Ticket ID: "\
                                         f"{len(main_window.tickets.data) + 1}")
-            self.ticket_name.setText(f"Caseta {len(main_window.tickets.data) + 1}")
+            self.ticket_name.setText(f"Ticket {len(main_window.tickets.data) + 1}")
         
             
     def value_warning(self):
@@ -446,7 +446,7 @@ class AddTicketDialog(QDialog):
         value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
         self.ticket_total.clear()
-        self.ticket_name.setText(f"Caseta {len(main_window.tickets.data) + 1}")
+        self.ticket_name.setText(f"Ticket {len(main_window.tickets.data) + 1}")
         self.ticket_total.setFocus()
         
         
@@ -460,7 +460,7 @@ class RemoveTicketDialog(QDialog):
         super().__init__()
         # Dialog config
         self.setWindowIcon(QIcon("Media\\action_icons\\remove.png"))
-        self.setWindowTitle("Eliminar caseta")
+        self.setWindowTitle("Eliminar ticket")
         self.setFixedSize(270,100)
         layout = QGridLayout()
         
@@ -469,10 +469,10 @@ class RemoveTicketDialog(QDialog):
                                                     0).text())
         
         # Dialog widgets
-        label = QLabel("¿Estás seguro que deseas eliminar esta caseta?")
+        label = QLabel("¿Estás seguro que deseas eliminar esta ticket?")
         layout.addWidget(label, 0, 0, 1, 2)
         
-        ticket_label = QLabel(f"Caseta ID: {self.ticket_id}")
+        ticket_label = QLabel(f"Ticket ID: {self.ticket_id}")
         layout.addWidget(ticket_label, 1, 0, 1, 2, Qt.AlignmentFlag.AlignHCenter)
         
         yes_button = QPushButton("Si")
@@ -504,7 +504,7 @@ class EditTicketDialog(QDialog):
         super().__init__()
         # Dialog config
         self.setWindowIcon(QIcon("Media\\action_icons\\edit.png"))
-        self.setWindowTitle("Editar caseta")
+        self.setWindowTitle("Editar ticket")
         self.setFixedSize(200,200)
         layout = QGridLayout()
         
@@ -513,11 +513,11 @@ class EditTicketDialog(QDialog):
                                                     0).text())
         
         # Dialog widgets
-        self.ticket_id_label = QLabel(f"Caseta ID: {self.ticket_id}")
+        self.ticket_id_label = QLabel(f"Ticket ID: {self.ticket_id}")
         layout.addWidget(self.ticket_id_label, 0, 0, 1, 2, 
                          Qt.AlignmentFlag.AlignHCenter)
         
-        ticket_name_label = QLabel("Caseta:")
+        ticket_name_label = QLabel("Ticket:")
         layout.addWidget(ticket_name_label, 1, 0, 1, 2)
         
         self.ticket_name = QLineEdit(main_window.table.item(
