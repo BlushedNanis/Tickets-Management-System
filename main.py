@@ -712,29 +712,34 @@ class ExportTicketsDialog(QDialog):
         # Dialog config
         self.setWindowIcon(QIcon("Media\\action_icons\\export.png"))
         self.setWindowTitle("Exportar tickets")
-        self.setFixedSize(300,300)
+        self.setFixedSize(300,270)
         layout = QGridLayout()
         
         # Dialog widgets
-        file_name_label = QLabel("Nombre:")
-        layout.addWidget(file_name_label, 0, 0, 1, 1)
+        file_name_label = QLabel("Nombre del archivo:")
+        layout.addWidget(file_name_label, 0, 0, 1, 2)
         
         self.file_name = QLineEdit()
-        layout.addWidget(self.file_name, 0, 1, 1, 1)
+        layout.addWidget(self.file_name, 1, 0, 1, 2)
         
         file_type_label = QLabel("Tipo de archivo:")
-        layout.addWidget(file_type_label, 2, 0,)
+        layout.addWidget(file_type_label, 2, 0, 1, 2)
         
         self.file_type_box = QComboBox()
         self.file_type_box.addItems(("CSV", "EXCEL", "PDF"))
-        layout.addWidget(self.file_type_box, 2, 1)
+        layout.addWidget(self.file_type_box, 3, 0, 1, 2)
         
-        self.path_label = QLabel(f"Ruta de exportado: {self.directory_path}")
-        layout.addWidget(self.path_label, 3, 0, 1, 2)
+        self.path_label = QLabel("Ruta de exportado:")
+        layout.addWidget(self.path_label, 4, 0, 1, 2)
         
-        file_path_button = QPushButton("Seleccionar ruta de exportado")
-        file_path_button.clicked.connect(self.select_path_dialog)
-        layout.addWidget(file_path_button, 4, 0, 2, 2)
+        self.file_path = QLineEdit()
+        self.file_path.setReadOnly(True)
+        self.file_path.setText(self.directory_path)
+        layout.addWidget(self.file_path, 5, 0, 1, 2)
+        
+        directory_button = QPushButton("Seleccionar ruta")
+        directory_button.clicked.connect(self.select_path_dialog)
+        layout.addWidget(directory_button, 6, 0, 1, 2)
         
         # Vertical spacing for buttons
         layout.addItem(QSpacerItem(20,20), 7, 0, 1, 2)
@@ -754,7 +759,7 @@ class ExportTicketsDialog(QDialog):
         Opens a QFileDialog for the user to choose a directory to export.
         """
         self.directory_path = QFileDialog().getExistingDirectory()
-        self.path_label.setText(f"Ruta de exportado: {self.directory_path}")
+        self.file_path.setText(self.directory_path)
         
     def export_tickets(self):
         """
