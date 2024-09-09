@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
     QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox, \
-    QFileDialog, QComboBox, QWidget, QVBoxLayout
+    QFileDialog, QComboBox
 from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator, \
     QDesktopServices
 from PySide6.QtCore import Qt, QUrl
@@ -178,6 +178,62 @@ class MainWindow(QMainWindow):
         self.help_menu_item.addAction(self.repo_help_action)
         self.help_menu_item.addAction(self.blushed_help_action)
         
+    def show_records_window(self):
+        """
+        Shows the records on the table widget and also the related toolbar and
+        menubar
+        """
+        self.setWindowTitle("Explorador de registros")
+        self.resize(900,600)
+        self.tickets.clear_data()
+        self.table.doubleClicked.disconnect()
+        self.table.doubleClicked.connect(self.open_record)
+        self.table.clear()
+        self.table.setColumnCount(8)
+        self.table.setHorizontalHeaderLabels(("ID", "Registro", "Fecha de guardado", 
+                                              "Fecha de modificacion", "Tickets",
+                                              "Total", "Sub-Total", "IVA"))
+        self.table.verticalHeader().setVisible(False)
+        #self.table.doubleClicked.connect(self.edit_ticket)
+        self.load_records()
+        # Set custom columns width
+        col_widths = (30,250,120,130,70,70,70,70)
+        for col, width in zip(range(0,8), col_widths):
+            self.table.setColumnWidth(col,width)
+        self.show_records_toolbar()
+        self.show_records_menubar()
+        
+    def show_records_toolbar(self):
+        """
+        Shows the toolbar for the records table
+        """
+        self.tool_bar.clear()
+        self.tool_bar.addActions((self.new_record_action,
+                                  self.remove_record_action, 
+                                  self.open_record_action))
+        
+    def show_records_menubar(self):
+        """
+        Shows the menubar for the records window
+        """
+        self.file_menu_item.clear()
+        # --> File actions
+        self.file_menu_item.addAction(self.new_record_action)
+        self.file_menu_item.addSeparator()
+        self.file_menu_item.addAction(self.remove_record_action)
+        self.file_menu_item.addAction(self.open_record_action)
+        # Hide icons in file menu
+        for action in self.file_menu_item.actions():
+            action.setIconVisibleInMenu(False)
+        
+        self.menuBar().removeAction(self.records_menu_item.menuAction())
+        
+        self.help_menu_item.clear()
+        # --> Help actions
+        self.help_menu_item.addAction(self.guide_help_action)
+        self.help_menu_item.addAction(self.repo_help_action)
+        self.help_menu_item.addAction(self.blushed_help_action)
+    
     def load_tickets(self):
         """
         Loads the tickets data into the main window table and 
@@ -254,62 +310,6 @@ class MainWindow(QMainWindow):
         else:
             self.dialog = SaveRecordDialog()
             self.dialog.exec()
-        
-    def show_records_window(self):
-        """
-        Shows the records on the table widget and also the related toolbar and
-        menubar
-        """
-        self.setWindowTitle("Explorador de registros")
-        self.resize(900,600)
-        self.tickets.clear_data()
-        self.table.doubleClicked.disconnect()
-        self.table.doubleClicked.connect(self.open_record)
-        self.table.clear()
-        self.table.setColumnCount(8)
-        self.table.setHorizontalHeaderLabels(("ID", "Registro", "Fecha de guardado", 
-                                              "Fecha de modificacion", "Tickets",
-                                              "Total", "Sub-Total", "IVA"))
-        self.table.verticalHeader().setVisible(False)
-        #self.table.doubleClicked.connect(self.edit_ticket)
-        self.load_records()
-        # Set custom columns width
-        col_widths = (30,250,120,130,70,70,70,70)
-        for col, width in zip(range(0,8), col_widths):
-            self.table.setColumnWidth(col,width)
-        self.show_records_toolbar()
-        self.show_records_menubar()
-        
-    def show_records_toolbar(self):
-        """
-        Shows the toolbar for the records table
-        """
-        self.tool_bar.clear()
-        self.tool_bar.addActions((self.new_record_action,
-                                  self.remove_record_action, 
-                                  self.open_record_action))
-        
-    def show_records_menubar(self):
-        """
-        Shows the menubar for the records window
-        """
-        self.file_menu_item.clear()
-        # --> File actions
-        self.file_menu_item.addAction(self.new_record_action)
-        self.file_menu_item.addSeparator()
-        self.file_menu_item.addAction(self.remove_record_action)
-        self.file_menu_item.addAction(self.open_record_action)
-        # Hide icons in file menu
-        for action in self.file_menu_item.actions():
-            action.setIconVisibleInMenu(False)
-        
-        self.menuBar().removeAction(self.records_menu_item.menuAction())
-        
-        self.help_menu_item.clear()
-        # --> Help actions
-        self.help_menu_item.addAction(self.guide_help_action)
-        self.help_menu_item.addAction(self.repo_help_action)
-        self.help_menu_item.addAction(self.blushed_help_action)
         
     def load_records(self):
         """
