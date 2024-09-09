@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
 from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator
 from PySide6.QtCore import Qt
 from tickets import Tickets
-from export import EXPORT
+from export import Export
 from sys import argv, exit
 
 
@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.export = EXPORT()
+        self.export = Export()
         
         # Create the tickets instance
         self.create_tickets()

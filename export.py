@@ -9,7 +9,7 @@ if not path.exists(DIRECTORY):
     mkdir(DIRECTORY)
     
 
-class EXPORT():
+class Export():
     def __init__(self):
         self.path = DIRECTORY
         self.create_path_table()
