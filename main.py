@@ -23,8 +23,9 @@ class MainWindow(QMainWindow):
         self.tickets = Tickets()
         self.records = Records()
         
-        # Validator to decimal number inputs
+        # Validator to decimal number and text inputs
         self.float_validator = QRegularExpressionValidator("^\\d+(\\.\\d+)?$")
+        self.text_validator = QRegularExpressionValidator("^[a-zA-Z0-9\- ]+$")
         
         # Window config
         self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
@@ -400,6 +401,7 @@ class AddTicketDialog(QDialog):
         layout.addWidget(ticket_name_label, 1, 0, 1, 2)
         
         self.ticket_name = QLineEdit(f"Ticket {len(main_window.tickets.data) + 1}")
+        self.ticket_name.setValidator(main_window.text_validator)
         layout.addWidget(self.ticket_name, 2, 0, 1, 2)
         
         ticket_total_label = QLabel("Total:")
@@ -532,6 +534,7 @@ class EditTicketDialog(QDialog):
         
         self.ticket_name = QLineEdit(main_window.table.item(
             main_window.table.currentRow(), 1).text())
+        self.ticket_name.setValidator(main_window.text_validator)
         layout.addWidget(self.ticket_name, 2, 0, 1, 2)
         
         ticket_total_label = QLabel("Total:")
@@ -641,6 +644,7 @@ class SaveRecordDialog(QDialog):
         layout.addWidget(ticket_name_label, 1, 0, 1, 2)
         
         self.record_name = QLineEdit()
+        self.record_name.setValidator(main_window.text_validator)
         layout.addWidget(self.record_name, 2, 0, 1, 2)
         
         # Vertical spacing for buttons
@@ -808,6 +812,7 @@ class ExportTicketsDialog(QDialog):
         layout.addWidget(file_name_label, 0, 0, 1, 2)
         
         self.file_name = QLineEdit()
+        self.file_name.setValidator(main_window.text_validator)
         layout.addWidget(self.file_name, 1, 0, 1, 2)
         
         file_type_label = QLabel("Tipo de archivo:")
