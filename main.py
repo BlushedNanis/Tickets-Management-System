@@ -660,11 +660,14 @@ class SaveRecordDialog(QDialog):
         """
         Saves the list of tickets into the database.
         """
-        main_window.tickets.save_record(self.record_name.text())
-        main_window.records.add_record(main_window.tickets.data,
-                                       self.record_name.text())
-        self.clear_tickets()
-        self.close() 
+        if self.record_name.text() == "":
+            self.value_warning()
+        else:
+            main_window.tickets.save_record(self.record_name.text())
+            main_window.records.add_record(main_window.tickets.data,
+                                        self.record_name.text())
+            self.clear_tickets()
+            self.close() 
         
     def clear_tickets(self):
         """
@@ -673,6 +676,17 @@ class SaveRecordDialog(QDialog):
         """
         main_window.table.setRowCount(0)
         main_window.tickets.clear_data()
+        
+    def value_warning(self):
+        """
+        QMessageBox to let the user know it's missing to input the name of the 
+        record.
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowTitle("Advertencia")
+        value_message.setText("Ooops, parece que te faltó ingresar el nombre")
+        value_message.exec()
         
         
 class RemoveRecordDialog(QDialog):
@@ -927,10 +941,11 @@ class ClearTicketsDialog(QDialog):
         
     def clear_tickets(self):
         """
-        Clear the tickets data and reset the tickets window.
+        Clear the tickets data and reset the table.
         """
+        main_window.table.setRowCount(0)
         main_window.tickets.clear_data()
-        main_window.show_tickets_window()
+        self.close()
         
         
 if __name__ == "__main__":
