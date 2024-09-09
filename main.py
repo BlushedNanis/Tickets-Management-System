@@ -2,8 +2,9 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
     QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox, \
     QFileDialog, QComboBox
-from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator, \
+    QDesktopServices
+from PySide6.QtCore import Qt, QUrl
 from tickets import Tickets
 from export import Export
 from records import Records
@@ -86,6 +87,7 @@ class MainWindow(QMainWindow):
         self.guide_help_action = QAction("Guía de uso", self)
         
         self.repo_help_action = QAction("Repositorio (GitHub)", self)
+        self.repo_help_action.triggered.connect(self.open_github_repo)
         
         self.blushed_help_action = QAction("BlushedNanis", self)
 
@@ -375,6 +377,13 @@ class MainWindow(QMainWindow):
         if self.table.rowCount() != 0:
             self.dialog = ClearTicketsDialog()
             self.dialog.exec()
+            
+    def open_github_repo(self):
+        """
+        Opens the GitHub repository on the user's default explorer
+        """
+        url = QUrl("https://github.com/BlushedNanis")
+        QDesktopServices.openUrl(url)
         
           
 class AddTicketDialog(QDialog):
