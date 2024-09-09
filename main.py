@@ -56,6 +56,10 @@ class MainWindow(QMainWindow):
         self.path_records_action = QAction("Ruta de exportado", self)
         self.path_records_action.triggered.connect(self.change_export_path)
         
+        self.clear_tickets_action = QAction(QIcon("Media\\action_icons\\clear.png"),
+                                            "Limpiar tickets", self)
+        self.clear_tickets_action.triggered.connect(self.clear_tickets)
+        
         # --> Records actions
         self.view_records_action = QAction(QIcon("Media\\action_icons\\view.png"),
                                            "Ver registros", self)
@@ -132,6 +136,8 @@ class MainWindow(QMainWindow):
         self.tool_bar.addActions((self.save_record_action,
                                   self.export_tickets_action,
                                   self.view_records_action))
+        self.tool_bar.addSeparator()
+        self.tool_bar.addAction(self.clear_tickets_action)
         
     def show_tickets_menubar(self):
         """
@@ -145,6 +151,8 @@ class MainWindow(QMainWindow):
         self.file_menu_item.addAction(self.add_tickets_action)
         self.file_menu_item.addAction(self.remove_ticket_action)
         self.file_menu_item.addAction(self.edit_ticket_action)
+        self.file_menu_item.addSeparator()
+        self.file_menu_item.addAction(self.clear_tickets_action)
         # Hide icons in file menu
         for action in self.file_menu_item.actions():
             action.setIconVisibleInMenu(False)
@@ -354,11 +362,18 @@ class MainWindow(QMainWindow):
             
     def change_export_path(self):
         """
-        
+        Executes the Change Export Path dialog.
         """
         self.dialog = ChangeExportPath()
         self.dialog.exec()
-            
+        
+    def clear_tickets(self):
+        """
+        Executes the Clear Tickets Dialog if the table is not empty.
+        """
+        if self.table.rowCount() != 0:
+            self.dialog = ClearTicketsDialog()
+            self.dialog.exec()
         
           
 class AddTicketDialog(QDialog):
@@ -880,6 +895,43 @@ class ChangeExportPath(QDialog):
         value_message.setText("La ruta de exportado a cambiado a:\n"\
                               f"{self.export_path.text()}")
         value_message.exec()
+        
+        
+class ClearTicketsDialog(QDialog):
+    """
+    QDialog to confirm that the user wants to clear the tickets. If yes, the
+    tickets data will be erased and reset the tickets window.
+    """
+    def __init__(self):
+        super().__init__()
+        
+        # Dialog config
+        self.setWindowIcon(QIcon("Media\\action_icons\\clear.png"))
+        self.setWindowTitle("Limpiar tickets")
+        self.setFixedSize(255,80)
+        layout = QGridLayout()
+        
+        # Dialog widgets
+        clear_label = QLabel("¿Estás seguro de que deseas limpiar la tabla?")
+        layout.addWidget(clear_label, 1, 0, 1, 2)
+        
+        yes_button = QPushButton("Si")
+        yes_button.clicked.connect(self.clear_tickets)
+        layout.addWidget(yes_button, 2, 0)
+        
+        no_button = QPushButton("No")
+        no_button.clicked.connect(self.close)
+        layout.addWidget(no_button, 2, 1)
+        
+        self.setLayout(layout)
+        
+    def clear_tickets(self):
+        """
+        Clear the tickets data and reset the tickets window.
+        """
+        main_window.tickets.clear_data()
+        main_window.show_tickets_window()
+        
         
 if __name__ == "__main__":
     app = QApplication(argv)
