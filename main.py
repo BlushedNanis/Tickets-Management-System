@@ -1,10 +1,12 @@
 from PySide6.QtWidgets import QMainWindow, QApplication, QTableWidget, \
     QAbstractItemView, QToolBar, QTableWidgetItem, QDialog, QLabel, \
     QGridLayout, QPushButton, QLineEdit, QSpacerItem, QMessageBox, \
-    QFileDialog, QComboBox
+    QFileDialog, QComboBox, QWidget, QVBoxLayout
 from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator, \
     QDesktopServices
 from PySide6.QtCore import Qt, QUrl
+from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtPdf import QPdfDocument
 from tickets import Tickets
 from export import Export
 from records import Records
@@ -85,6 +87,7 @@ class MainWindow(QMainWindow):
         
         # --> Help actions
         self.guide_help_action = QAction("Guía de uso", self)
+        self.guide_help_action.triggered.connect(self.open_user_guide)
         
         self.repo_help_action = QAction("Repositorio (GitHub)", self)
         self.repo_help_action.triggered.connect(self.open_github_repo)
@@ -385,6 +388,12 @@ class MainWindow(QMainWindow):
         url = QUrl("https://github.com/BlushedNanis")
         QDesktopServices.openUrl(url)
         
+    def open_user_guide(self):
+        """
+        Shows the pdf viw for the user guide
+        """
+        self.pdf_viewer_window = PdfViewerWindow()
+        self.pdf_viewer_window.show()
           
 class AddTicketDialog(QDialog):
     """
@@ -1029,6 +1038,27 @@ class ClearTicketsDialog(QDialog):
         self.close()
         
         
+class PdfViewerWindow(QPdfView):
+    """
+    QPdfView to display the user guide in a separate and independant window.
+    """
+    def __init__(self):
+        super().__init__()
+        
+        # Window config
+        self.setWindowTitle("Guía de usuario")
+        self.setWindowIcon(QIcon("Media\\window_icon\\pdf.png"))
+        self.setMinimumSize(880,600)
+        
+        # Page mode config
+        self.setPageMode(QPdfView.PageMode.MultiPage)
+        
+        # Load and set pdf guide
+        self.pdf_guide = QPdfDocument()
+        self.pdf_guide.load("Media\\guide\\user_guide.pdf")
+        self.setDocument(self.pdf_guide)
+        
+          
 if __name__ == "__main__":
     app = QApplication(argv)
     main_window = MainWindow()
