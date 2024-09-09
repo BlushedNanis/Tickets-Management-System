@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
         
         # Validator to decimal number and text inputs
         self.float_validator = QRegularExpressionValidator("^\\d+(\\.\\d+)?$")
-        self.text_validator = QRegularExpressionValidator("^[a-zA-Z0-9\- ]+$")
+        self.text_validator = QRegularExpressionValidator("^[a-zA-Z0-9\\- ]+$")
         
         # Window config
         self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
