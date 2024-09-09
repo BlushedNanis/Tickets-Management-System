@@ -953,9 +953,12 @@ class ChangeExportPath(QDialog):
         Exports the list of tickets in the main window table in the selected 
         type of file and directory.
         """
-        main_window.export.change_export_path(self.export_path.text())
-        self.close()
-        self.succes_message()
+        if self.export_path.text() == "":
+            self.value_warning()
+        else:
+            main_window.export.change_export_path(self.export_path.text())
+            self.close()
+            self.succes_message()
 
     def succes_message(self):
         """
@@ -967,6 +970,16 @@ class ChangeExportPath(QDialog):
         value_message.setWindowTitle("Modificación exitosa")
         value_message.setText("La ruta de exportado a cambiado a:\n"\
                               f"{self.export_path.text()}")
+        value_message.exec()
+        
+    def value_warning(self):
+        """
+        QMessageBox to let the user know it's missing an input
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowTitle("Advertencia")
+        value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
         
         
