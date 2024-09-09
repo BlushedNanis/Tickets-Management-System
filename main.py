@@ -884,17 +884,20 @@ class ExportTicketsDialog(QDialog):
             file_name = self.file_name.text()
             
             if file_type == 0:
-                main_window.export.to_csv(main_window.tickets.data, self.directory_path, file_name)
+                main_window.export.to_csv(main_window.tickets.data,
+                                          self.directory_path, file_name)
                 self.close()
-                self.succes_message()
+                self.success_message()
             elif file_type == 1:
-                main_window.export.to_excel(main_window.tickets.data, self.directory_path, file_name)
+                main_window.export.to_excel(main_window.tickets.data,
+                                            self.directory_path, file_name)
                 self.close()
-                self.succes_message()
+                self.success_message()
             else:
-                main_window.export.to_pdf(main_window.tickets.data, self.directory_path, file_name)
+                main_window.export.to_pdf(main_window.tickets.data,
+                                          self.directory_path, file_name)
                 self.close()
-                self.succes_message()
+                self.success_message()
             
     def value_warning(self):
         """
