@@ -667,7 +667,8 @@ class SaveRecordDialog(QDialog):
             main_window.records.add_record(main_window.tickets.data,
                                         self.record_name.text())
             self.clear_tickets()
-            self.close() 
+            self.close()
+            self.success_message()
         
     def clear_tickets(self):
         """
@@ -686,6 +687,17 @@ class SaveRecordDialog(QDialog):
         value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó ingresar el nombre")
+        value_message.exec()
+    
+    def success_message(self):
+        """
+        QMessageBox to let the user know that the record has been successfully
+        saved.
+        """
+        value_message = QMessageBox()
+        value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
+        value_message.setWindowTitle("Registro guardado")
+        value_message.setText("El registro ha sido guardado exitosamente!")
         value_message.exec()
         
         
@@ -830,9 +842,9 @@ class ExportTicketsDialog(QDialog):
         value_message.setText("Ooops, parece que te faltó ingresar el nombre")
         value_message.exec()
 
-    def succes_message(self):
+    def success_message(self):
         """
-        QMessageBox to let the user know that the export has been succesful.
+        QMessageBox to let the user know that the export has been successful.
         """
         value_message = QMessageBox()
         value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
