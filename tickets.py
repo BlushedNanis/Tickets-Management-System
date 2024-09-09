@@ -90,12 +90,3 @@ class Tickets():
         self.data = pd.read_sql_query(f"SELECT * FROM {record_name}", conn)
         self.data.index = self.data["ID"].values
         conn.close()
-        
-        
-if __name__ == "__main__":
-    t = Tickets()
-    print(t.data)
-    for index, row in t.data.iterrows():
-        print(index)
-        for column, data in enumerate(row):
-            print(column, data)
