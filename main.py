@@ -877,7 +877,7 @@ class ExportTicketsDialog(QDialog):
         Exports the list of tickets in the main window table in the selected 
         type of file and directory.
         """
-        if self.file_name.text() == "":
+        if self.file_name.text() == "" or self.directory_path == "":
             self.value_warning()
         else:
             file_type = self.file_type_box.currentIndex()
@@ -901,13 +901,12 @@ class ExportTicketsDialog(QDialog):
             
     def value_warning(self):
         """
-        QMessageBox to let the user know it's missing to input the name of the 
-        file.
+        QMessageBox to let the user know it's missing an input.
         """
         value_message = QMessageBox()
         value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
         value_message.setWindowTitle("Advertencia")
-        value_message.setText("Ooops, parece que te faltó ingresar el nombre")
+        value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
 
     def success_message(self):
