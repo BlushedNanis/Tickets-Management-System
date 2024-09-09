@@ -647,7 +647,7 @@ class SaveRecordDialog(QDialog):
         layout.addItem(QSpacerItem(20,20), 5, 0, 1, 2)
         
         save_button = QPushButton("Guardar")
-        save_button.clicked.connect(self.save_record)
+        save_button.clicked.connect(self.check_record_name)
         layout.addWidget(save_button, 6, 0)
         
         cancel_button = QPushButton("Cancelar")
@@ -656,19 +656,29 @@ class SaveRecordDialog(QDialog):
         
         self.setLayout(layout)
         
-    def save_record(self):
+    def check_record_name(self):
         """
-        Saves the list of tickets into the database.
+        Checks the name value of the record. If the name is an empty string will
+        raise a value message box, if the name already exist as a record will
+        raise a QDialog to confirm that the user wants to overwrite it. 
         """
         if self.record_name.text() == "":
             self.value_warning()
+        elif self.record_name.text() in main_window.records.fetch_all_names():
+            self.record_exists()
         else:
-            main_window.tickets.save_record(self.record_name.text())
-            main_window.records.add_record(main_window.tickets.data,
-                                        self.record_name.text())
-            self.clear_tickets()
-            self.close()
-            self.success_message()
+            self.save_record()
+            
+    def save_record(self):
+        """
+        Saves the record in the databse
+        """
+        main_window.tickets.save_record(self.record_name.text())
+        main_window.records.add_record(main_window.tickets.data,
+                                    self.record_name.text())
+        self.clear_tickets()
+        self.close()
+        self.success_message()
         
     def clear_tickets(self):
         """
@@ -677,6 +687,38 @@ class SaveRecordDialog(QDialog):
         """
         main_window.table.setRowCount(0)
         main_window.tickets.clear_data()
+        
+    def record_exists(self):
+        """
+        Executes a QDialog to confirm that the user wants to modify an existent
+        record
+        """
+        confirmation_dialog = QDialog()
+        
+        confirmation_dialog.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        confirmation_dialog.setWindowTitle("Advertencia")
+        confirmation_dialog.setFixedSize(200,120)
+        layout = QGridLayout()
+        
+        # Dialog widgets
+        label = QLabel(f"El registro: {self.record_name.text()}\n"\
+                       "Ya existe, al continuar\n"\
+                       "modificará el registro existente",
+                       alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(label, 0, 0, 1, 2)
+        
+        save_button = QPushButton("Modificar")
+        save_button.clicked.connect(confirmation_dialog.close)
+        save_button.clicked.connect(self.save_record)
+        layout.addWidget(save_button, 6, 0)
+        
+        cancel_button = QPushButton("Cancelar")
+        cancel_button.clicked.connect(confirmation_dialog.close)
+        layout.addWidget(cancel_button, 6, 1)
+        
+        confirmation_dialog.setLayout(layout)
+        
+        confirmation_dialog.exec()
         
     def value_warning(self):
         """

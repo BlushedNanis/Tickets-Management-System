@@ -111,3 +111,19 @@ class Records():
         conn.commit()
         cur.close()
         conn.close()
+        
+    def fetch_all_names(self) -> list:
+        """Fetch the names registered in the records table
+
+        Returns:
+            list: List of names registered on the record table
+        """
+        conn = db.connect(self.db_file)
+        cur = conn.cursor()
+        cur.execute("SELECT Name FROM records")
+        names = cur.fetchall()
+        cur.close()
+        conn.close()
+        names = [item[0] for item in names]
+        print(names)
+        return names
