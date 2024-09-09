@@ -12,6 +12,7 @@ if not path.exists(DIRECTORY):
 class Records():
     def __init__(self) -> None:
         self.db_file = DIRECTORY + "\\records.db"
+        self.create_table()
         
     def create_table(self) -> None:
         """

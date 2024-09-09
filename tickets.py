@@ -1,7 +1,6 @@
 import pandas as pd
 import sqlite3 as db
 from os import environ, path, mkdir
-from records import Records
 
 DIRECTORY = environ["USERPROFILE"] + "\\.tickets"
 if not path.exists(DIRECTORY):
@@ -12,8 +11,6 @@ class Tickets():
         self.data = pd.DataFrame(columns=["ID", "Ticket", "Total", "Sub-Total", "IVA"])
         self.data["ID"] = self.data.index
         self.db_file = DIRECTORY + "\\records.db"
-        self.records = Records()
-        self.records.create_table()
         
     def add_ticket(self, ticket_name:str, ticket_total:float):
         """
@@ -75,7 +72,6 @@ class Tickets():
         conn = db.connect(self.db_file)
         self.data.to_sql(record_name, conn, index=False, if_exists="replace")
         conn.close()
-        self.records.add_record(self.data, record_name)
         
     def clear_data(self) -> None:
         """

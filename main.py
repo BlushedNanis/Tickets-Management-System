@@ -6,6 +6,7 @@ from PySide6.QtGui import QIcon, QAction, QRegularExpressionValidator
 from PySide6.QtCore import Qt
 from tickets import Tickets
 from export import Export
+from records import Records
 from sys import argv, exit
 
 
@@ -17,10 +18,10 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
+        # Create the objects instances
         self.export = Export()
-        
-        # Create the tickets instance
-        self.create_tickets()
+        self.tickets = Tickets()
+        self.records = Records()
         
         # Validator to decimal number inputs
         self.float_validator = QRegularExpressionValidator("^\\d+(\\.\\d+)?$")
@@ -190,12 +191,6 @@ class MainWindow(QMainWindow):
                                QTableWidgetItem(str(cell_data)))
         for col in range(self.table.columnCount()):
             self.table.item(self.summary_row, col).setFlags(Qt.ItemFlag.ItemIsEnabled)
-    
-    def create_tickets(self):
-        """
-        Creates a tickets instance
-        """
-        self.tickets = Tickets()
         
     def add_tickets(self):
         """
@@ -307,8 +302,8 @@ class MainWindow(QMainWindow):
         Loads the records data into the main window table
         """
         self.table.setRowCount(0)
-        self.tickets.records.load_records()
-        for index, row in self.tickets.records.data.iterrows():
+        self.records.load_records()
+        for index, row in self.records.data.iterrows():
             self.table.insertRow(index)
             for column_number, cell_data in enumerate(row):
                 self.table.setItem(index, column_number,
@@ -651,6 +646,8 @@ class SaveRecordDialog(QDialog):
         Saves the list of tickets into the database.
         """
         main_window.tickets.save_record(self.record_name.text())
+        main_window.records.add_record(main_window.tickets.data,
+                                       self.record_name.text())
         self.clear_tickets()
         self.close() 
         
@@ -701,7 +698,7 @@ class RemoveRecordDialog(QDialog):
         """
         Removes the selected record from the database and updates the table.
         """
-        main_window.tickets.records.remove_record(self.record_name)
+        main_window.records.remove_record(self.record_name)
         main_window.load_records()
         self.close()
         
