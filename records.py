@@ -125,5 +125,4 @@ class Records():
         cur.close()
         conn.close()
         names = [item[0] for item in names]
-        print(names)
         return names
