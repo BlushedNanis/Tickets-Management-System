@@ -386,7 +386,7 @@ class MainWindow(QMainWindow):
         """
         Opens the GitHub repository on the user's default explorer
         """
-        url = QUrl("https://github.com/BlushedNanis")
+        url = QUrl("https://github.com/BlushedNanis/Tickets-Management-System")
         QDesktopServices.openUrl(url)
         
     def open_user_guide(self):
