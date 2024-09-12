@@ -87,6 +87,6 @@ class Tickets():
             record_name (str):  Name of the record
         """
         conn = db.connect(self.db_file)
-        self.data = pd.read_sql_query(f"SELECT * FROM {record_name}", conn)
+        self.data = pd.read_sql_query(f"SELECT * FROM '{record_name}'", conn)
         self.data.index = self.data["ID"].values
         conn.close()

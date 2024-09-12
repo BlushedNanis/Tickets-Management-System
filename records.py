@@ -106,7 +106,7 @@ class Records():
         """
         conn = db.connect(self.db_file)
         cur = conn.cursor()
-        cur.execute(f"DROP TABLE {record_name}")
+        cur.execute(f"DROP TABLE '{record_name}'")
         cur.execute("DELETE FROM 'records' WHERE Name==?", (record_name,))
         conn.commit()
         cur.close()
