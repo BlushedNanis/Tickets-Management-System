@@ -1050,7 +1050,7 @@ class PdfViewerWindow(QPdfView):
         # Window config
         self.setWindowTitle("Guía de usuario")
         self.setWindowIcon(QIcon("Media\\window_icon\\pdf.png"))
-        self.setMinimumSize(880,600)
+        self.setMinimumSize(880,700)
         
         # Page mode config
         self.setPageMode(QPdfView.PageMode.MultiPage)
