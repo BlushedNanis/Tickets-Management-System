@@ -112,7 +112,7 @@ class MainWindow(QMainWindow):
         Shows the tickets on the table widget and also the related toolbar and 
         menubar
         """
-        self.setWindowTitle("Tickets Management System")
+        self.setWindowTitle("Sistema de tickets")
         self.resize(600, 600)
         self.menuBar().show()
         self.table.clear()
