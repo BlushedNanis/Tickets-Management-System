@@ -1,0 +1,18 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file alias="add.png">Media\action_icons\add.png</file>
+    <file alias="clear.png">Media\action_icons\clear.png</file>
+    <file alias="edit.png">Media\action_icons\edit.png</file>
+    <file alias="export.png">Media\action_icons\export.png</file>
+    <file alias="open.png">Media\action_icons\open.png</file>
+    <file alias="remove.png">Media\action_icons\remove.png</file>
+    <file alias="save.png">Media\action_icons\save.png</file>
+    <file alias="view.png">Media\action_icons\view.png</file>
+    <file alias="folder.png">Media/window_icon/folder.png</file>
+    <file alias="pdf.png">Media/window_icon/pdf.png</file>
+    <file alias="success.png">Media/window_icon/success.png</file>
+    <file alias="warning.png">Media/window_icon/warning.png</file>
+    <file alias="icon.ico">Media/window_icon/icon.ico</file>
+    <file alias="user_guide.pdf">Media\guide\user_guide.pdf</file>
+</qresource>
+</RCC>
