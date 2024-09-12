@@ -11,6 +11,7 @@ from tickets import Tickets
 from export import Export
 from records import Records
 from sys import argv, exit
+import resources_rc
 
 
 class MainWindow(QMainWindow):
@@ -31,7 +32,7 @@ class MainWindow(QMainWindow):
         self.text_validator = QRegularExpressionValidator("^[a-zA-Z0-9\\- ]+$")
         
         # Window config
-        self.setWindowIcon(QIcon("Media\\window_icon\\icon.ico"))
+        self.setWindowIcon(QIcon(":/icon.ico"))
         self.setMinimumSize(300, 200)
         
         # Menu bar
@@ -41,47 +42,47 @@ class MainWindow(QMainWindow):
         
         # Actions
         # --> Tickets actions
-        self.add_tickets_action = QAction(QIcon("Media\\action_icons\\add.png"),
+        self.add_tickets_action = QAction(QIcon(":/add.png"),
                                           "Agregar tickets", self)
         self.add_tickets_action.triggered.connect(self.add_tickets)
         
-        self.remove_ticket_action = QAction(QIcon("Media\\action_icons\\remove.png"),
+        self.remove_ticket_action = QAction(QIcon(":/remove.png"),
                                             "Eliminar ticket", self)
         self.remove_ticket_action.triggered.connect(self.remove_ticket)
         
-        self.edit_ticket_action = QAction(QIcon("Media\\action_icons\\edit.png"),
+        self.edit_ticket_action = QAction(QIcon(":/edit.png"),
                                           "Editar ticket", self)
         self.edit_ticket_action.triggered.connect(self.edit_ticket)
         
-        self.export_tickets_action = QAction(QIcon("Media\\action_icons\\export.png"),
+        self.export_tickets_action = QAction(QIcon(":/export.png"),
                                             "Exportar tickets", self)
         self.export_tickets_action.triggered.connect(self.export_tickets)
         
         self.path_records_action = QAction("Ruta de exportado", self)
         self.path_records_action.triggered.connect(self.change_export_path)
         
-        self.clear_tickets_action = QAction(QIcon("Media\\action_icons\\clear.png"),
+        self.clear_tickets_action = QAction(QIcon(":/clear.png"),
                                             "Limpiar tickets", self)
         self.clear_tickets_action.triggered.connect(self.clear_tickets)
         
         # --> Records actions
-        self.view_records_action = QAction(QIcon("Media\\action_icons\\view.png"),
+        self.view_records_action = QAction(QIcon(":/view.png"),
                                            "Ver registros", self)
         self.view_records_action.triggered.connect(self.view_records)
         
-        self.new_record_action = QAction(QIcon("Media\\action_icons\\add.png"),
+        self.new_record_action = QAction(QIcon(":/add.png"),
                                                "Nuevo registro", self)
         self.new_record_action.triggered.connect(self.new_record)
         
-        self.remove_record_action = QAction(QIcon("Media\\action_icons\\remove.png"),
+        self.remove_record_action = QAction(QIcon(":/remove.png"),
                                             "Eliminar registro", self)
         self.remove_record_action.triggered.connect(self.remove_record)
         
-        self.open_record_action = QAction(QIcon("Media\\action_icons\\open.png"),
+        self.open_record_action = QAction(QIcon(":/open.png"),
                                           "Abrir registro", self)
         self.open_record_action.triggered.connect(self.open_record)
         
-        self.save_record_action = QAction(QIcon("Media\\action_icons\\save.png"),
+        self.save_record_action = QAction(QIcon(":/save.png"),
                                           "Guardar registro", self)
         self.save_record_action.triggered.connect(self.save_record)
         
@@ -404,7 +405,7 @@ class AddTicketDialog(QDialog):
     def __init__(self):
         super().__init__()
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\add.png"))
+        self.setWindowIcon(QIcon(":/add.png"))
         self.setWindowTitle("Agregar tickets")
         self.setFixedSize(200,200)
         layout = QGridLayout()
@@ -471,7 +472,7 @@ class AddTicketDialog(QDialog):
         the input lines to the default values.
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowIcon(QIcon(":/warning.png"))
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
@@ -489,7 +490,7 @@ class RemoveTicketDialog(QDialog):
     def __init__(self):
         super().__init__()
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\remove.png"))
+        self.setWindowIcon(QIcon(":/remove.png"))
         self.setWindowTitle("Eliminar ticket")
         self.setFixedSize(270,100)
         layout = QGridLayout()
@@ -533,7 +534,7 @@ class EditTicketDialog(QDialog):
     def __init__(self):
         super().__init__()
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\edit.png"))
+        self.setWindowIcon(QIcon(":/edit.png"))
         self.setWindowTitle("Editar ticket")
         self.setFixedSize(200,200)
         layout = QGridLayout()
@@ -599,7 +600,7 @@ class EditTicketDialog(QDialog):
         the input lines to the default values.
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowIcon(QIcon(":/warning.png"))
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
@@ -614,7 +615,7 @@ class ViewRecordsDialog(QDialog):
     def __init__(self):
         super().__init__()
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\view.png"))
+        self.setWindowIcon(QIcon(":/view.png"))
         self.setWindowTitle("Ver registros")
         self.setFixedSize(250,130)
         layout = QGridLayout()
@@ -652,7 +653,7 @@ class SaveRecordDialog(QDialog):
     def __init__(self):
         super().__init__()
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\save.png"))
+        self.setWindowIcon(QIcon(":/save.png"))
         self.setWindowTitle("Guardar registro")
         self.setFixedSize(200,120)
         layout = QGridLayout()
@@ -717,7 +718,7 @@ class SaveRecordDialog(QDialog):
         """
         confirmation_dialog = QDialog()
         
-        confirmation_dialog.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        confirmation_dialog.setWindowIcon(QIcon(":/warning.png"))
         confirmation_dialog.setWindowTitle("Advertencia")
         confirmation_dialog.setFixedSize(200,120)
         layout = QGridLayout()
@@ -748,7 +749,7 @@ class SaveRecordDialog(QDialog):
         record.
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowIcon(QIcon(":/warning.png"))
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó ingresar el nombre")
         value_message.exec()
@@ -759,7 +760,7 @@ class SaveRecordDialog(QDialog):
         saved.
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
+        value_message.setWindowIcon(QIcon(":/success.png"))
         value_message.setWindowTitle("Registro guardado")
         value_message.setText("El registro ha sido guardado exitosamente!")
         value_message.exec()
@@ -773,7 +774,7 @@ class RemoveRecordDialog(QDialog):
     def __init__(self):
         super().__init__()
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\remove.png"))
+        self.setWindowIcon(QIcon(":/remove.png"))
         self.setWindowTitle("Eliminar registro")
         self.setFixedSize(270,100)
         layout = QGridLayout()
@@ -820,7 +821,7 @@ class ExportTicketsDialog(QDialog):
         self.directory_path = main_window.export.path
         
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\export.png"))
+        self.setWindowIcon(QIcon(":/export.png"))
         self.setWindowTitle("Exportar tickets")
         self.setFixedSize(300,270)
         layout = QGridLayout()
@@ -904,7 +905,7 @@ class ExportTicketsDialog(QDialog):
         QMessageBox to let the user know it's missing an input.
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowIcon(QIcon(":/warning.png"))
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
@@ -914,7 +915,7 @@ class ExportTicketsDialog(QDialog):
         QMessageBox to let the user know that the export has been successful.
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
+        value_message.setWindowIcon(QIcon(":/success.png"))
         value_message.setWindowTitle("Exportación exitosa")
         value_message.setText("El archivo ha sido exportado exitosamente!")
         value_message.exec()
@@ -930,7 +931,7 @@ class ChangeExportPath(QDialog):
         self.directory_path = main_window.export.path
         
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\window_icon\\folder.png"))
+        self.setWindowIcon(QIcon(":/folder.png"))
         self.setWindowTitle("Ruta de exportado")
         self.setFixedSize(300,150)
         layout = QGridLayout()
@@ -986,7 +987,7 @@ class ChangeExportPath(QDialog):
         succesfully changed.
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\success.png"))
+        value_message.setWindowIcon(QIcon(":/success.png"))
         value_message.setWindowTitle("Modificación exitosa")
         value_message.setText("La ruta de exportado a cambiado a:\n"\
                               f"{self.export_path.text()}")
@@ -997,7 +998,7 @@ class ChangeExportPath(QDialog):
         QMessageBox to let the user know it's missing an input
         """
         value_message = QMessageBox()
-        value_message.setWindowIcon(QIcon("Media\\window_icon\\warning.png"))
+        value_message.setWindowIcon(QIcon(":/warning.png"))
         value_message.setWindowTitle("Advertencia")
         value_message.setText("Ooops, parece que te faltó llenar un campo")
         value_message.exec()
@@ -1012,7 +1013,7 @@ class ClearTicketsDialog(QDialog):
         super().__init__()
         
         # Dialog config
-        self.setWindowIcon(QIcon("Media\\action_icons\\clear.png"))
+        self.setWindowIcon(QIcon(":/clear.png"))
         self.setWindowTitle("Limpiar tickets")
         self.setFixedSize(255,80)
         layout = QGridLayout()
@@ -1049,7 +1050,7 @@ class PdfViewerWindow(QPdfView):
         
         # Window config
         self.setWindowTitle("Guía de usuario")
-        self.setWindowIcon(QIcon("Media\\window_icon\\pdf.png"))
+        self.setWindowIcon(QIcon(":/pdf.png"))
         self.setMinimumSize(880,700)
         
         # Page mode config
@@ -1057,7 +1058,7 @@ class PdfViewerWindow(QPdfView):
         
         # Load and set pdf guide
         self.pdf_guide = QPdfDocument()
-        self.pdf_guide.load("Media\\guide\\user_guide.pdf")
+        self.pdf_guide.load(":/user_guide.pdf")
         self.setDocument(self.pdf_guide)
         
           
